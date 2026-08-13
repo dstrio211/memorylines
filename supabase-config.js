@@ -6,7 +6,7 @@
  */
 window.MEMORY_GALLERY_SUPABASE = {
   url: "https://vngiramaaykekrlsiatn.supabase.co",
-  publishableKey: "sbxxxxxxx2",
+  publishableKey: "sb_publishable_Rt2EH1MNuhqbTniTy82QgA_Zaau4dy2",
   bucket: "memories",
   table: "memories",
   deletePassword: "usagi"
