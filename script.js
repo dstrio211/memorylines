@@ -119,11 +119,6 @@ function renderGallery() {
 
   gallery.innerHTML = "";
 
-  if (memoryCount) {
-    memoryCount.textContent =
-      `${pad(memories.length)} / 24`;
-  }
-
   const emptyState =
     document.querySelector("#emptyState");
 
