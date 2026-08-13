@@ -11,21 +11,13 @@
   <main class="site-shell">
     <header class="hero">
       <div class="hero-top">
-        <!-- ✏️ EDIT TEXT: TOP-LEFT LABEL -->
         <span class="micro">MEMORY / 01</span>
-
-        <!-- ✏️ EDIT TEXT: TOP-RIGHT LABEL -->
         <span class="micro status"><i></i> PRIVATE COLLECTION</span>
       </div>
 
       <div class="hero-copy">
-        <!-- ✏️ EDIT TEXT: HERO KICKER -->
         <p class="kicker">Lorem ipsum dolor sit amet</p>
-
-        <!-- ✏️ EDIT TEXT: MAIN HERO TITLE -->
         <h1>A quiet place<br><em>for the moments</em><br>worth keeping.</h1>
-
-        <!-- ✏️ EDIT TEXT: HERO DESCRIPTION -->
         <p class="lede">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit.
           Nulla facilisi. Quisque interdum, enim vitae tempus feugiat,
@@ -34,32 +26,22 @@
       </div>
 
       <div class="hero-meta">
-        <!-- ✏️ EDIT TEXT: COLLECTION META LEFT -->
         <span>COLLECTION 01</span>
         <span class="meta-line"></span>
-        <!-- ✏️ EDIT TEXT: COLLECTION META RIGHT -->
-        <span id="memoryCount">00 / 24</span>
+        <span id="memoryCount">09 / 24</span>
       </div>
     </header>
 
     <section class="gallery-section">
       <div class="section-head">
         <div>
-          <!-- ✏️ EDIT TEXT: ARCHIVE LABEL -->
           <span class="micro">THE ARCHIVE</span>
-
-          <!-- ✏️ EDIT TEXT: ARCHIVE TITLE -->
           <h2>Little things.</h2>
         </div>
         <p>Scroll slowly.<br>There is no rush.</p>
       </div>
 
       <div id="gallery" class="gallery"></div>
-      <div id="emptyState" class="empty-state">
-        <!-- ✏️ EDIT TEXT: EMPTY STATE (OPTIONAL) -->
-        <span>Nothing here yet.</span>
-        <small>Add your first memory with the + button.</small>
-      </div>
     </section>
 
     <footer class="footer">
@@ -83,7 +65,15 @@
     <button id="viewerClose" class="viewer-close" aria-label="Close photo viewer">
       <span></span><span></span>
     </button>
-<div class="viewer-chrome" id="viewerChrome" aria-hidden="false">
+
+    <button id="viewerDelete" class="viewer-delete" aria-label="Delete this memory" title="Delete memory">
+      <span class="trash-lid"></span>
+      <span class="trash-can"></span>
+    </button>
+
+    <div class="viewer-progress" id="viewerProgress">01 / 09</div>
+
+    <div class="viewer-chrome" id="viewerChrome" aria-hidden="false">
       <span class="viewer-kicker">MEMORY</span>
     </div>
 
@@ -154,8 +144,6 @@
     </section>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
