@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f0f0f">
+  <title>Memory — A quiet collection</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="site-shell">
+    <header class="hero">
+      <div class="hero-top">
+        <!-- ✏️ EDIT TEXT: TOP-LEFT LABEL -->
+        <span class="micro">MEMORY / 01</span>
+
+        <!-- ✏️ EDIT TEXT: TOP-RIGHT LABEL -->
+        <span class="micro status"><i></i> PRIVATE COLLECTION</span>
+      </div>
+
+      <div class="hero-copy">
+        <!-- ✏️ EDIT TEXT: HERO KICKER -->
+        <p class="kicker">Lorem ipsum dolor sit amet</p>
+
+        <!-- ✏️ EDIT TEXT: MAIN HERO TITLE -->
+        <h1>A quiet place<br><em>for the moments</em><br>worth keeping.</h1>
+
+        <!-- ✏️ EDIT TEXT: HERO DESCRIPTION -->
+        <p class="lede">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          Nulla facilisi. Quisque interdum, enim vitae tempus feugiat,
+          justo mauris consequat nunc.
+        </p>
+      </div>
+
+      <div class="hero-meta">
+        <!-- ✏️ EDIT TEXT: COLLECTION META LEFT -->
+        <span>COLLECTION 01</span>
+        <span class="meta-line"></span>
+        <!-- ✏️ EDIT TEXT: COLLECTION META RIGHT -->
+        <span id="memoryCount">00 / 24</span>
+      </div>
+    </header>
+
+    <section class="gallery-section">
+      <div class="section-head">
+        <div>
+          <!-- ✏️ EDIT TEXT: ARCHIVE LABEL -->
+          <span class="micro">THE ARCHIVE</span>
+
+          <!-- ✏️ EDIT TEXT: ARCHIVE TITLE -->
+          <h2>Little things.</h2>
+        </div>
+        <p>Scroll slowly.<br>There is no rush.</p>
+      </div>
+
+      <div id="gallery" class="gallery"></div>
+      <div id="emptyState" class="empty-state">
+        <!-- ✏️ EDIT TEXT: EMPTY STATE (OPTIONAL) -->
+        <span>Nothing here yet.</span>
+        <small>Add your first memory with the + button.</small>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>LOREM IPSUM</span>
+      <span>MADE FOR MEMORIES</span>
+    </footer>
+  </main>
+
+  <button id="addButton" class="glass-add" aria-label="Add a memory">
+    <span class="plus" aria-hidden="true"></span>
+    <span class="add-label">Add memory</span>
+  </button>
+
+  <!-- Immersive viewer -->
+  <div id="sharedTransition" class="shared-transition" aria-hidden="true"><img id="sharedTransitionImg" alt=""></div>
+
+  <div id="viewer" class="viewer" aria-hidden="true">
+    <div class="viewer-backdrop"></div>
+    <div class="viewer-scroll" id="viewerScroll"></div>
+
+    <button id="viewerClose" class="viewer-close" aria-label="Close photo viewer">
+      <span></span><span></span>
+    </button>
+<div class="viewer-chrome" id="viewerChrome" aria-hidden="false">
+      <span class="viewer-kicker">MEMORY</span>
+    </div>
+
+    <div class="viewer-boundary" id="viewerBoundary" aria-hidden="true">Release to return</div>
+
+    <div class="viewer-hint" id="viewerHint">
+      <span>Scroll</span>
+      <i></i>
+    </div>
+  </div>
+
+  <!-- Delete confirmation -->
+  <div id="deleteSheet" class="delete-sheet" aria-hidden="true">
+    <div class="delete-scrim"></div>
+    <section class="delete-panel" role="dialog" aria-modal="true" aria-labelledby="deleteTitle">
+      <div class="sheet-grabber"></div>
+      <span class="micro">REMOVE MEMORY</span>
+      <h2 id="deleteTitle">Delete this<br><em>memory?</em></h2>
+      <p>This action cannot be undone.</p>
+
+      <label class="delete-field">
+        <span>PASSWORD</span>
+        <input id="deletePassword" type="password" inputmode="text" autocomplete="off" placeholder="Enter password">
+      </label>
+
+      <div id="deleteError" class="delete-error" aria-live="polite"></div>
+
+      <div class="delete-actions">
+        <button id="deleteCancel" class="ghost-button" type="button">Cancel</button>
+        <button id="deleteConfirm" class="delete-confirm" type="button">Delete memory</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- Upload sheet -->
+  <div id="sheet" class="sheet" aria-hidden="true">
+    <div class="sheet-scrim"></div>
+    <section class="sheet-panel" role="dialog" aria-modal="true">
+      <div class="sheet-grabber"></div>
+      <div class="sheet-header">
+        <div>
+          <span class="micro">NEW MEMORY</span>
+          <h2>Keep a little<br><em>moment.</em></h2>
+        </div>
+        <button id="closeSheet" class="round-close" aria-label="Close">×</button>
+      </div>
+
+      <label class="upload-zone" for="photoInput">
+        <input id="photoInput" type="file" accept="image/*">
+        <span class="upload-orb">+</span>
+        <strong>Choose a photograph</strong>
+        <small>Any size. Any ratio. Keep it exactly as it is.</small>
+      </label>
+
+      <div id="preview" class="preview" hidden>
+        <img id="previewImg" alt="Photo preview">
+      </div>
+
+      <label class="title-field">
+        <span>TITLE</span>
+        <input id="titleInput" maxlength="80" placeholder="A quiet afternoon...">
+      </label>
+
+      <div class="sheet-actions">
+        <button id="cancel" class="ghost-button" type="button">Cancel</button>
+        <button id="save" class="save-button" type="button">Keep this memory <span>↗</span></button>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
