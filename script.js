@@ -6,6 +6,7 @@ const viewer = document.querySelector("#viewer");
 const viewerBackdrop = document.querySelector(".viewer-backdrop");
 const viewerScroll = document.querySelector("#viewerScroll");
 const viewerClose = document.querySelector("#viewerClose");
+const viewerDelete = document.querySelector("#viewerDelete");
 const viewerHint = document.querySelector("#viewerHint");
 const viewerChrome = document.querySelector("#viewerChrome");
 const viewerBoundary = document.querySelector("#viewerBoundary");
@@ -22,13 +23,23 @@ const preview = document.querySelector("#preview");
 const previewImg = document.querySelector("#previewImg");
 const save = document.querySelector("#save");
 
+/* Delete UI */
+const deleteSheet = document.querySelector("#deleteSheet");
+const deletePassword = document.querySelector("#deletePassword");
+const deleteConfirm = document.querySelector("#deleteConfirm");
+const deleteCancel = document.querySelector("#deleteCancel");
+const deleteError = document.querySelector("#deleteError");
+
 const memories = [];
 
-const supabaseConfig = window.MEMORY_GALLERY_SUPABASE || {};
+const supabaseConfig =
+  window.MEMORY_GALLERY_SUPABASE || {};
 
 const SUPABASE_CONFIGURED =
   typeof window.supabase?.createClient === "function" &&
-  /^https:\/\/[^\s]+/.test(supabaseConfig.url || "") &&
+  /^https:\/\/[^\s]+/.test(
+    supabaseConfig.url || ""
+  ) &&
   supabaseConfig.publishableKey &&
   !supabaseConfig.publishableKey.startsWith("YOUR_");
 
@@ -58,6 +69,12 @@ let boundaryPull = 0;
 let previewObjectUrl = null;
 let loadingMemories = false;
 let savingMemory = false;
+let deletingMemory = false;
+
+
+/* =========================================================
+   BASIC HELPERS
+========================================================= */
 
 function pad(n) {
   return String(n).padStart(2, "0");
@@ -65,51 +82,79 @@ function pad(n) {
 
 function setLoadingState(isLoading) {
   loadingMemories = isLoading;
-  addButton.disabled = isLoading;
-  addButton.setAttribute("aria-busy", String(isLoading));
+
+  if (addButton) {
+    addButton.disabled = isLoading;
+    addButton.setAttribute(
+      "aria-busy",
+      String(isLoading)
+    );
+  }
 }
 
 function showDataError(message) {
-  console.error(`[Memory Gallery] ${message}`);
+  console.error(
+    `[Memory Gallery] ${message}`
+  );
 }
 
 function publicImageUrl(storagePath) {
-  const { data } = supabaseClient.storage
-    .from(supabaseConfig.bucket)
-    .getPublicUrl(storagePath);
+  if (!supabaseClient) return "";
+
+  const { data } =
+    supabaseClient.storage
+      .from(supabaseConfig.bucket)
+      .getPublicUrl(storagePath);
 
   return data?.publicUrl || "";
 }
 
+
+/* =========================================================
+   GALLERY
+========================================================= */
+
 function renderGallery() {
+  if (!gallery) return;
+
   gallery.innerHTML = "";
 
-  memoryCount.textContent = `${pad(memories.length)} / 24`;
+  if (memoryCount) {
+    memoryCount.textContent =
+      `${pad(memories.length)} / 24`;
+  }
 
-  const emptyState = document.querySelector("#emptyState");
+  const emptyState =
+    document.querySelector("#emptyState");
 
   if (emptyState) {
-    emptyState.hidden = memories.length > 0;
+    emptyState.hidden =
+      memories.length > 0;
   }
 
   memories.forEach((memory, index) => {
-    const button = document.createElement("button");
+    const button =
+      document.createElement("button");
 
     button.className = "tile";
     button.type = "button";
+
     button.setAttribute(
       "aria-label",
       `Open ${memory.title || "memory"}`
     );
 
-    button.addEventListener("click", () => {
-      openViewer(index, button);
-    });
+    button.addEventListener(
+      "click",
+      () => openViewer(index, button)
+    );
 
-    const img = document.createElement("img");
+    const img =
+      document.createElement("img");
 
     img.src = memory.src;
-    img.alt = memory.title || "Memory";
+    img.alt =
+      memory.title || "Memory";
     img.loading = "lazy";
     img.decoding = "async";
 
@@ -118,41 +163,63 @@ function renderGallery() {
   });
 }
 
+
+/* =========================================================
+   VIEWER
+========================================================= */
+
 function buildViewer() {
   viewerScroll.innerHTML = "";
 
   memories.forEach((memory, index) => {
-    const card = document.createElement("article");
+    const card =
+      document.createElement("article");
 
     card.className = "viewer-card";
     card.dataset.index = index;
 
-    const wrap = document.createElement("div");
+    const wrap =
+      document.createElement("div");
 
-    wrap.className = "viewer-photo-wrap";
+    wrap.className =
+      "viewer-photo-wrap";
 
-    const img = document.createElement("img");
+    const img =
+      document.createElement("img");
 
-    img.className = "viewer-photo";
+    img.className =
+      "viewer-photo";
+
     img.src = memory.src;
-    img.alt = memory.title || "Memory";
+
+    img.alt =
+      memory.title || "Memory";
+
     img.decoding = "async";
 
     wrap.append(img);
 
     if (memory.title) {
-      card.classList.add("has-caption");
+      card.classList.add(
+        "has-caption"
+      );
 
-      const fade = document.createElement("div");
+      const fade =
+        document.createElement("div");
 
-      fade.className = "viewer-caption-fade";
+      fade.className =
+        "viewer-caption-fade";
 
       wrap.append(fade);
 
-      const caption = document.createElement("div");
+      const caption =
+        document.createElement("div");
 
-      caption.className = "viewer-title";
-      caption.textContent = memory.title;
+      caption.className =
+        "viewer-title";
+
+      caption.textContent =
+        memory.title;
 
       wrap.append(caption);
     }
@@ -165,7 +232,8 @@ function buildViewer() {
 }
 
 function setBackdrop(index) {
-  const memory = memories[index];
+  const memory =
+    memories[index];
 
   if (!memory) return;
 
@@ -175,7 +243,9 @@ function setBackdrop(index) {
 
 function updateViewerFromScroll() {
   const cards = [
-    ...viewerScroll.querySelectorAll(".viewer-card")
+    ...viewerScroll.querySelectorAll(
+      ".viewer-card"
+    )
   ];
 
   if (!cards.length) return;
@@ -192,7 +262,10 @@ function updateViewerFromScroll() {
       card.offsetTop +
       card.offsetHeight / 2;
 
-    const d = Math.abs(center - cardCenter);
+    const d =
+      Math.abs(
+        center - cardCenter
+      );
 
     if (d < distance) {
       distance = d;
@@ -203,93 +276,150 @@ function updateViewerFromScroll() {
   if (nearest !== activeIndex) {
     activeIndex = nearest;
 
-    setActiveCard(activeIndex);
-    setBackdrop(activeIndex);
+    setActiveCard(
+      activeIndex
+    );
+
+    setBackdrop(
+      activeIndex
+    );
 
     hintDismissed = true;
 
-    viewer.classList.add("has-scrolled");
+    viewer.classList.add(
+      "has-scrolled"
+    );
   }
 
-  if (viewerScroll.scrollTop > 30 && !hintDismissed) {
+  if (
+    viewerScroll.scrollTop > 30 &&
+    !hintDismissed
+  ) {
     hintDismissed = true;
-    viewer.classList.add("has-scrolled");
+
+    viewer.classList.add(
+      "has-scrolled"
+    );
   }
 }
 
-function sharedOpenTransition(tile, index) {
-  const img = tile.querySelector("img");
+function sharedOpenTransition(
+  tile,
+  index
+) {
+  const img =
+    tile.querySelector("img");
 
-  if (!img) return Promise.resolve();
+  if (!img) {
+    return Promise.resolve();
+  }
 
-  const rect = img.getBoundingClientRect();
+  const rect =
+    img.getBoundingClientRect();
 
-  sharedTransitionImg.src = memories[index].src;
+  sharedTransitionImg.src =
+    memories[index].src;
 
-  Object.assign(sharedTransition.style, {
-    left: `${rect.left}px`,
-    top: `${rect.top}px`,
-    width: `${rect.width}px`,
-    height: `${rect.height}px`,
-    opacity: "1"
-  });
+  Object.assign(
+    sharedTransition.style,
+    {
+      left: `${rect.left}px`,
+      top: `${rect.top}px`,
+      width: `${rect.width}px`,
+      height: `${rect.height}px`,
+      opacity: "1"
+    }
+  );
 
-  sharedTransition.classList.add("active");
+  sharedTransition.classList.add(
+    "active"
+  );
 
   return new Promise(resolve => {
     requestAnimationFrame(() => {
       const targetImg =
         viewerScroll
-          .querySelectorAll(".viewer-card")[index]
-          ?.querySelector(".viewer-photo");
+          .querySelectorAll(
+            ".viewer-card"
+          )[index]
+          ?.querySelector(
+            ".viewer-photo"
+          );
 
       if (!targetImg) {
         resolve();
         return;
       }
 
-      const before = targetImg.getBoundingClientRect();
+      const before =
+        targetImg.getBoundingClientRect();
 
-      Object.assign(sharedTransition.style, {
-        left: `${before.left}px`,
-        top: `${before.top}px`,
-        width: `${before.width}px`,
-        height: `${before.height}px`
-      });
+      Object.assign(
+        sharedTransition.style,
+        {
+          left: `${before.left}px`,
+          top: `${before.top}px`,
+          width: `${before.width}px`,
+          height: `${before.height}px`
+        }
+      );
 
-      setTimeout(resolve, 650);
+      setTimeout(
+        resolve,
+        650
+      );
     });
   });
 }
 
 function clearSharedTransition() {
-  sharedTransition.classList.remove("active");
-  sharedTransition.style.opacity = "0";
+  sharedTransition.classList.remove(
+    "active"
+  );
+
+  sharedTransition.style.opacity =
+    "0";
 }
 
 function showViewerChrome() {
-  viewer.classList.remove("is-quiet");
+  viewer.classList.remove(
+    "is-quiet"
+  );
 
-  clearTimeout(quietTimer);
+  clearTimeout(
+    quietTimer
+  );
 
   quietTimer = setTimeout(() => {
-    viewer.classList.add("is-quiet");
+    viewer.classList.add(
+      "is-quiet"
+    );
   }, 3200);
 }
 
 function toggleViewerChrome() {
-  if (viewer.classList.contains("is-quiet")) {
+  if (
+    viewer.classList.contains(
+      "is-quiet"
+    )
+  ) {
     showViewerChrome();
   } else {
-    viewer.classList.add("is-quiet");
+    viewer.classList.add(
+      "is-quiet"
+    );
 
-    clearTimeout(quietTimer);
+    clearTimeout(
+      quietTimer
+    );
   }
 }
 
 function setActiveCard(index) {
   viewerScroll
-    .querySelectorAll(".viewer-card")
+    .querySelectorAll(
+      ".viewer-card"
+    )
     .forEach((card, i) => {
       card.classList.toggle(
         "is-active",
@@ -298,7 +428,10 @@ function setActiveCard(index) {
     });
 }
 
-async function openViewer(index, tile) {
+async function openViewer(
+  index,
+  tile
+) {
   activeIndex = index;
   viewerOpen = true;
   hintDismissed = false;
@@ -314,95 +447,154 @@ async function openViewer(index, tile) {
 
   buildViewer();
 
-  setActiveCard(activeIndex);
+  setActiveCard(
+    activeIndex
+  );
 
-  viewer.classList.add("open");
-  viewer.setAttribute("aria-hidden", "false");
+  viewer.classList.add(
+    "open"
+  );
 
-  document.body.style.overflow = "hidden";
+  viewer.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  document.body.style.overflow =
+    "hidden";
 
   requestAnimationFrame(() => {
     viewerScroll
-      .querySelectorAll(".viewer-card")[index]
+      .querySelectorAll(
+        ".viewer-card"
+      )[index]
       ?.scrollIntoView({
         block: "start"
       });
   });
 
-  await new Promise(r =>
-    requestAnimationFrame(() =>
-      requestAnimationFrame(r)
-    )
-  );
+  await new Promise(resolve => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(
+        resolve
+      );
+    });
+  });
 
-  await sharedOpenTransition(tile, index);
+  await sharedOpenTransition(
+    tile,
+    index
+  );
 
   clearSharedTransition();
 }
 
 async function closeViewer() {
-  if (!viewerOpen || closing) return;
+  if (
+    !viewerOpen ||
+    closing
+  ) {
+    return;
+  }
 
   closing = true;
 
   const cards = [
-    ...viewerScroll.querySelectorAll(".viewer-card")
+    ...viewerScroll.querySelectorAll(
+      ".viewer-card"
+    )
   ];
 
-  const activeCard = cards[activeIndex];
+  const activeCard =
+    cards[activeIndex];
 
   const activeImg =
-    activeCard?.querySelector(".viewer-photo");
+    activeCard?.querySelector(
+      ".viewer-photo"
+    );
 
   const tile =
-    gallery.querySelectorAll(".tile")[activeIndex];
+    gallery.querySelectorAll(
+      ".tile"
+    )[activeIndex];
 
-  if (activeImg && tile) {
-    const from = activeImg.getBoundingClientRect();
+  if (
+    activeImg &&
+    tile &&
+    memories[activeIndex]
+  ) {
+    const from =
+      activeImg.getBoundingClientRect();
 
     const to =
-      tile.querySelector("img").getBoundingClientRect();
+      tile
+        .querySelector("img")
+        .getBoundingClientRect();
 
     sharedTransitionImg.src =
       memories[activeIndex].src;
 
-    Object.assign(sharedTransition.style, {
-      left: `${from.left}px`,
-      top: `${from.top}px`,
-      width: `${from.width}px`,
-      height: `${from.height}px`,
-      opacity: "1"
-    });
+    Object.assign(
+      sharedTransition.style,
+      {
+        left: `${from.left}px`,
+        top: `${from.top}px`,
+        width: `${from.width}px`,
+        height: `${from.height}px`,
+        opacity: "1"
+      }
+    );
 
-    sharedTransition.classList.add("active");
+    sharedTransition.classList.add(
+      "active"
+    );
 
-    viewer.classList.remove("open");
+    viewer.classList.remove(
+      "open"
+    );
 
     await new Promise(resolve => {
       requestAnimationFrame(() => {
-        Object.assign(sharedTransition.style, {
-          left: `${to.left}px`,
-          top: `${to.top}px`,
-          width: `${to.width}px`,
-          height: `${to.height}px`
-        });
+        Object.assign(
+          sharedTransition.style,
+          {
+            left: `${to.left}px`,
+            top: `${to.top}px`,
+            width: `${to.width}px`,
+            height: `${to.height}px`
+          }
+        );
 
-        setTimeout(resolve, 620);
+        setTimeout(
+          resolve,
+          620
+        );
       });
     });
   } else {
-    viewer.classList.remove("open");
+    viewer.classList.remove(
+      "open"
+    );
   }
 
   clearSharedTransition();
 
-  viewer.setAttribute("aria-hidden", "true");
+  viewer.setAttribute(
+    "aria-hidden",
+    "true"
+  );
 
-  document.body.style.overflow = "";
+  document.body.style.overflow =
+    "";
 
   viewerOpen = false;
   closing = false;
 }
+
+
+/* =========================================================
+   LOAD MEMORIES
+========================================================= */
 
 async function loadMemories() {
   if (!SUPABASE_CONFIGURED) {
@@ -418,34 +610,48 @@ async function loadMemories() {
   setLoadingState(true);
 
   try {
-    const { data, error } =
-      await supabaseClient
-        .from(supabaseConfig.table)
-        .select(
-          "id,title,storage_path,created_at"
-        )
-        .order("created_at", {
+    const {
+      data,
+      error
+    } = await supabaseClient
+      .from(supabaseConfig.table)
+      .select(
+        "id,title,storage_path,created_at"
+      )
+      .order(
+        "created_at",
+        {
           ascending: true
-        })
-        .order("id", {
+        }
+      )
+      .order(
+        "id",
+        {
           ascending: true
-        });
+        }
+      );
 
-    if (error) throw error;
+    if (error) {
+      throw error;
+    }
 
     memories.length = 0;
 
     (data || []).forEach(row => {
-      const src = publicImageUrl(
-        row.storage_path
-      );
+      const src =
+        publicImageUrl(
+          row.storage_path
+        );
 
       if (src) {
         memories.push({
           id: row.id,
-          title: row.title?.trim() || "",
-          storagePath: row.storage_path,
-          createdAt: row.created_at,
+          title:
+            row.title?.trim() || "",
+          storagePath:
+            row.storage_path,
+          createdAt:
+            row.created_at,
           src
         });
       }
@@ -467,6 +673,11 @@ async function loadMemories() {
   }
 }
 
+
+/* =========================================================
+   UPLOAD
+========================================================= */
+
 function makeStoragePath(file) {
   const mimeExtension = {
     "image/jpeg": "jpg",
@@ -482,10 +693,14 @@ function makeStoragePath(file) {
 
   const originalExtension =
     (
-      file.name?.split(".").pop() || ""
+      file.name?.split(".").pop() ||
+      ""
     )
       .toLowerCase()
-      .replace(/[^a-z0-9]/g, "");
+      .replace(
+        /[^a-z0-9]/g,
+        ""
+      );
 
   const extension =
     mimeExtension[file.type] ||
@@ -493,7 +708,8 @@ function makeStoragePath(file) {
     "jpg";
 
   const id =
-    crypto.randomUUID
+    typeof crypto.randomUUID ===
+    "function"
       ? crypto.randomUUID()
       : `${Date.now()}-${Math.random()
           .toString(16)
@@ -515,16 +731,22 @@ async function saveMemoryToSupabase(
   const storagePath =
     makeStoragePath(file);
 
-  const { error: uploadError } =
+  const {
+    error: uploadError
+  } =
     await supabaseClient.storage
-      .from(supabaseConfig.bucket)
+      .from(
+        supabaseConfig.bucket
+      )
       .upload(
         storagePath,
         file,
         {
           contentType:
-            file.type || undefined,
-          cacheControl: "31536000",
+            file.type ||
+            undefined,
+          cacheControl:
+            "31536000",
           upsert: false
         }
       );
@@ -536,16 +758,21 @@ async function saveMemoryToSupabase(
   const {
     data,
     error: insertError
-  } = await supabaseClient
-    .from(supabaseConfig.table)
-    .insert({
-      title: title || null,
-      storage_path: storagePath
-    })
-    .select(
-      "id,title,storage_path,created_at"
-    )
-    .single();
+  } =
+    await supabaseClient
+      .from(
+        supabaseConfig.table
+      )
+      .insert({
+        title:
+          title || null,
+        storage_path:
+          storagePath
+      })
+      .select(
+        "id,title,storage_path,created_at"
+      )
+      .single();
 
   if (insertError) {
     throw insertError;
@@ -553,60 +780,420 @@ async function saveMemoryToSupabase(
 
   return {
     id: data.id,
-    title: data.title?.trim() || "",
-    storagePath: data.storage_path,
-    createdAt: data.created_at,
-    src: publicImageUrl(
-      data.storage_path
-    )
+    title:
+      data.title?.trim() || "",
+    storagePath:
+      data.storage_path,
+    createdAt:
+      data.created_at,
+    src:
+      publicImageUrl(
+        data.storage_path
+      )
   };
 }
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+function openDeleteSheet() {
+  if (!viewerOpen) return;
+  if (deletingMemory) return;
+  if (!memories[activeIndex]) return;
+
+  deletePassword.value = "";
+  deleteError.textContent = "";
+
+  deleteSheet.classList.add(
+    "open"
+  );
+
+  deleteSheet.setAttribute(
+    "aria-hidden",
+    "false"
+  );
+
+  setTimeout(() => {
+    deletePassword.focus();
+  }, 100);
+}
+
+function closeDeleteSheet() {
+  if (deletingMemory) return;
+
+  deleteSheet.classList.remove(
+    "open"
+  );
+
+  deleteSheet.setAttribute(
+    "aria-hidden",
+    "true"
+  );
+
+  deletePassword.value = "";
+  deleteError.textContent = "";
+}
+
+async function deleteMemoryFromSupabase(
+  memory
+) {
+  if (!SUPABASE_CONFIGURED) {
+    throw new Error(
+      "Supabase is not configured."
+    );
+  }
+
+  if (
+    !memory?.id ||
+    !memory?.storagePath
+  ) {
+    throw new Error(
+      "Invalid memory data."
+    );
+  }
+
+  /*
+   * Delete image from Storage.
+   */
+  const {
+    error: storageError
+  } =
+    await supabaseClient.storage
+      .from(
+        supabaseConfig.bucket
+      )
+      .remove([
+        memory.storagePath
+      ]);
+
+  if (storageError) {
+    throw storageError;
+  }
+
+  /*
+   * Delete database record.
+   */
+  const {
+    error: databaseError
+  } =
+    await supabaseClient
+      .from(
+        supabaseConfig.table
+      )
+      .delete()
+      .eq(
+        "id",
+        memory.id
+      );
+
+  if (databaseError) {
+    throw databaseError;
+  }
+}
+
+
+/* =========================================================
+   VIEWER BUTTONS
+========================================================= */
 
 viewerScroll.addEventListener(
   "scroll",
   updateViewerFromScroll,
-  { passive: true }
+  {
+    passive: true
+  }
 );
 
 viewerClose.addEventListener(
   "click",
-  closeViewer
+  event => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    closeViewer();
+  }
 );
+
+
+/*
+ * TRASH BUTTON
+ *
+ * stopPropagation() is important.
+ * Without it, the click can reach the
+ * viewer click listener and close/toggle
+ * the viewer instead.
+ */
+if (viewerDelete) {
+  viewerDelete.addEventListener(
+    "click",
+    event => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      openDeleteSheet();
+    }
+  );
+}
 
 viewerBackdrop.addEventListener(
   "click",
   closeViewer
 );
 
+
+/* =========================================================
+   DELETE POPUP BUTTONS
+========================================================= */
+
+if (deleteCancel) {
+  deleteCancel.addEventListener(
+    "click",
+    event => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      closeDeleteSheet();
+    }
+  );
+}
+
+if (deleteSheet) {
+  const deleteScrim =
+    deleteSheet.querySelector(
+      ".delete-scrim"
+    );
+
+  if (deleteScrim) {
+    deleteScrim.addEventListener(
+      "click",
+      closeDeleteSheet
+    );
+  }
+}
+
+
+/* =========================================================
+   CONFIRM DELETE
+========================================================= */
+
+if (deleteConfirm) {
+  deleteConfirm.addEventListener(
+    "click",
+    async event => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      if (deletingMemory) {
+        return;
+      }
+
+      const password =
+        deletePassword.value;
+
+      if (!password) {
+        deleteError.textContent =
+          "Please enter the password.";
+
+        deletePassword.focus();
+
+        return;
+      }
+
+      const correctPassword =
+        supabaseConfig.deletePassword;
+
+      if (
+        password !==
+        correctPassword
+      ) {
+        deleteError.textContent =
+          "Incorrect password.";
+
+        deletePassword.select();
+
+        return;
+      }
+
+      const memory =
+        memories[activeIndex];
+
+      if (!memory) {
+        deleteError.textContent =
+          "Memory not found.";
+
+        return;
+      }
+
+      deletingMemory = true;
+
+      deleteConfirm.disabled =
+        true;
+
+      deleteCancel.disabled =
+        true;
+
+      deleteConfirm.setAttribute(
+        "aria-busy",
+        "true"
+      );
+
+      deleteError.textContent =
+        "Deleting memory...";
+
+      try {
+        await deleteMemoryFromSupabase(
+          memory
+        );
+
+        /*
+         * Remove from local array.
+         */
+        memories.splice(
+          activeIndex,
+          1
+        );
+
+        /*
+         * Close delete popup.
+         */
+        deleteSheet.classList.remove(
+          "open"
+        );
+
+        deleteSheet.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+
+        /*
+         * Close viewer.
+         */
+        viewer.classList.remove(
+          "open"
+        );
+
+        viewer.setAttribute(
+          "aria-hidden",
+          "true"
+        );
+
+        document.body.style.overflow =
+          "";
+
+        viewerOpen = false;
+        closing = false;
+
+        /*
+         * Reset active index.
+         */
+        activeIndex =
+          Math.max(
+            0,
+            Math.min(
+              activeIndex,
+              memories.length - 1
+            )
+          );
+
+        /*
+         * Refresh gallery.
+         */
+        renderGallery();
+
+        deletePassword.value =
+          "";
+
+        deleteError.textContent =
+          "";
+
+      } catch (error) {
+        console.error(
+          "[Memory Gallery] Delete failed:",
+          error
+        );
+
+        deleteError.textContent =
+          `Could not delete memory: ${
+            error.message ||
+            error
+          }`;
+
+      } finally {
+        deletingMemory = false;
+
+        deleteConfirm.disabled =
+          false;
+
+        deleteCancel.disabled =
+          false;
+
+        deleteConfirm.setAttribute(
+          "aria-busy",
+          "false"
+        );
+      }
+    }
+  );
+}
+
+
+/* =========================================================
+   KEYBOARD
+========================================================= */
+
 document.addEventListener(
   "keydown",
-  e => {
-    if (e.key === "Escape") {
+  event => {
+    /*
+     * Escape
+     */
+    if (event.key === "Escape") {
+      if (
+        deleteSheet.classList.contains(
+          "open"
+        )
+      ) {
+        closeDeleteSheet();
+        return;
+      }
+
       if (viewerOpen) {
         closeViewer();
       } else if (
-        sheet.classList.contains("open")
+        sheet.classList.contains(
+          "open"
+        )
       ) {
         close();
       }
     }
 
+    /*
+     * Viewer navigation
+     */
     if (
       viewerOpen &&
       (
-        e.key === "ArrowDown" ||
-        e.key === "ArrowRight"
+        event.key ===
+          "ArrowDown" ||
+        event.key ===
+          "ArrowRight"
       )
     ) {
       viewerScroll
-        .querySelectorAll(".viewer-card")[
+        .querySelectorAll(
+          ".viewer-card"
+        )[
           Math.min(
             memories.length - 1,
             activeIndex + 1
           )
         ]
         ?.scrollIntoView({
-          behavior: "smooth",
+          behavior:
+            "smooth",
           block: "start"
         });
     }
@@ -614,26 +1201,38 @@ document.addEventListener(
     if (
       viewerOpen &&
       (
-        e.key === "ArrowUp" ||
-        e.key === "ArrowLeft"
+        event.key ===
+          "ArrowUp" ||
+        event.key ===
+          "ArrowLeft"
       )
     ) {
       viewerScroll
-        .querySelectorAll(".viewer-card")[
+        .querySelectorAll(
+          ".viewer-card"
+        )[
           Math.max(
             0,
             activeIndex - 1
           )
         ]
         ?.scrollIntoView({
-          behavior: "smooth",
+          behavior:
+            "smooth",
           block: "start"
         });
     }
   }
 );
 
-function startBoundaryDrag(clientY) {
+
+/* =========================================================
+   BOUNDARY DRAG
+========================================================= */
+
+function startBoundaryDrag(
+  clientY
+) {
   if (!viewerOpen) return;
 
   const atTop =
@@ -641,20 +1240,29 @@ function startBoundaryDrag(clientY) {
     viewerScroll.scrollTop <= 2;
 
   const atBottom =
-    activeIndex === memories.length - 1 &&
+    activeIndex ===
+      memories.length - 1 &&
     Math.ceil(
       viewerScroll.scrollTop +
-      viewerScroll.clientHeight
+        viewerScroll.clientHeight
     ) >=
-      viewerScroll.scrollHeight - 2;
+      viewerScroll.scrollHeight -
+        2;
 
-  if (!atTop && !atBottom) return;
+  if (
+    !atTop &&
+    !atBottom
+  ) {
+    return;
+  }
 
   dragStartY = clientY;
   draggingBoundary = true;
 }
 
-function updateBoundaryDrag(clientY) {
+function updateBoundaryDrag(
+  clientY
+) {
   if (
     !draggingBoundary ||
     dragStartY == null
@@ -669,8 +1277,14 @@ function updateBoundaryDrag(clientY) {
     activeIndex === 0;
 
   const pull = atTop
-    ? Math.max(0, delta)
-    : Math.max(0, -delta);
+    ? Math.max(
+        0,
+        delta
+      )
+    : Math.max(
+        0,
+        -delta
+      );
 
   if (pull > 8) {
     viewerBoundary.classList.toggle(
@@ -682,14 +1296,19 @@ function updateBoundaryDrag(clientY) {
       `translate(-50%, -50%) scale(${
         Math.min(
           1.06,
-          0.94 + pull / 400
+          0.94 +
+            pull / 400
         )
       })`;
   }
 }
 
-async function endBoundaryDrag(clientY) {
-  if (!draggingBoundary) return;
+async function endBoundaryDrag(
+  clientY
+) {
+  if (!draggingBoundary) {
+    return;
+  }
 
   const atTop =
     activeIndex === 0;
@@ -698,8 +1317,14 @@ async function endBoundaryDrag(clientY) {
     clientY - dragStartY;
 
   const pull = atTop
-    ? Math.max(0, delta)
-    : Math.max(0, -delta);
+    ? Math.max(
+        0,
+        delta
+      )
+    : Math.max(
+        0,
+        -delta
+      );
 
   dragStartY = null;
   draggingBoundary = false;
@@ -716,6 +1341,11 @@ async function endBoundaryDrag(clientY) {
   }
 }
 
+
+/* =========================================================
+   UPLOAD SHEET
+========================================================= */
+
 function openSheet() {
   if (
     loadingMemories ||
@@ -724,7 +1354,9 @@ function openSheet() {
     return;
   }
 
-  sheet.classList.add("open");
+  sheet.classList.add(
+    "open"
+  );
 
   sheet.setAttribute(
     "aria-hidden",
@@ -738,21 +1370,26 @@ function openSheet() {
 function close() {
   /*
    * IMPORTANT:
-   * Do NOT block this function with
+   * There is intentionally NO:
+   *
    * if(savingMemory)return;
    *
-   * The upload handler sets savingMemory
-   * to false BEFORE calling close().
+   * because savingMemory is set to false
+   * before this function is called after
+   * a successful upload.
    */
 
-  sheet.classList.remove("open");
+  sheet.classList.remove(
+    "open"
+  );
 
   sheet.setAttribute(
     "aria-hidden",
     "true"
   );
 
-  document.body.style.overflow = "";
+  document.body.style.overflow =
+    "";
 
   photoInput.value = "";
   titleInput.value = "";
@@ -788,11 +1425,18 @@ cancel.addEventListener(
 );
 
 sheet
-  .querySelector(".sheet-scrim")
+  .querySelector(
+    ".sheet-scrim"
+  )
   .addEventListener(
     "click",
     close
-  );
+);
+
+
+/* =========================================================
+   PHOTO PREVIEW
+========================================================= */
 
 photoInput.addEventListener(
   "change",
@@ -803,7 +1447,9 @@ photoInput.addEventListener(
     if (!file) return;
 
     if (
-      !file.type.startsWith("image/")
+      !file.type.startsWith(
+        "image/"
+      )
     ) {
       photoInput.value = "";
 
@@ -821,7 +1467,9 @@ photoInput.addEventListener(
     }
 
     previewObjectUrl =
-      URL.createObjectURL(file);
+      URL.createObjectURL(
+        file
+      );
 
     previewImg.src =
       previewObjectUrl;
@@ -830,13 +1478,11 @@ photoInput.addEventListener(
   }
 );
 
-/*
- * FIXED UPLOAD HANDLER
- *
- * The important part is that
- * savingMemory becomes false BEFORE
- * close() is called.
- */
+
+/* =========================================================
+   SAVE MEMORY
+========================================================= */
+
 save.addEventListener(
   "click",
   async () => {
@@ -848,7 +1494,9 @@ save.addEventListener(
       return;
     }
 
-    if (savingMemory) return;
+    if (savingMemory) {
+      return;
+    }
 
     savingMemory = true;
 
@@ -869,32 +1517,39 @@ save.addEventListener(
           title
         );
 
-      memories.push(memory);
+      memories.push(
+        memory
+      );
 
-      memories.sort((a, b) => {
-        const timeA =
-          Date.parse(
-            a.createdAt
-          ) || 0;
+      memories.sort(
+        (a, b) => {
+          const timeA =
+            Date.parse(
+              a.createdAt
+            ) || 0;
 
-        const timeB =
-          Date.parse(
-            b.createdAt
-          ) || 0;
+          const timeB =
+            Date.parse(
+              b.createdAt
+            ) || 0;
 
-        return (
-          timeA - timeB ||
-          String(a.id).localeCompare(
-            String(b.id)
-          )
-        );
-      });
+          return (
+            timeA -
+              timeB ||
+            String(
+              a.id
+            ).localeCompare(
+              String(b.id)
+            )
+          );
+        }
+      );
 
       renderGallery();
 
       /*
        * IMPORTANT:
-       * Reset state BEFORE closing.
+       * Set false BEFORE close().
        */
       savingMemory = false;
 
@@ -905,9 +1560,6 @@ save.addEventListener(
         "false"
       );
 
-      /*
-       * Close upload sheet.
-       */
       close();
 
     } catch (error) {
@@ -918,7 +1570,8 @@ save.addEventListener(
 
       showDataError(
         `Could not save memory: ${
-          error.message || error
+          error.message ||
+          error
         }`
       );
 
@@ -934,11 +1587,20 @@ save.addEventListener(
   }
 );
 
+
+/* =========================================================
+   VIEWER CLICK
+========================================================= */
+
 viewer.addEventListener(
   "click",
   event => {
     if (!viewerOpen) return;
 
+    /*
+     * Don't let these buttons trigger
+     * viewer chrome behavior.
+     */
     if (
       event.target.closest(
         ".viewer-close"
@@ -947,9 +1609,22 @@ viewer.addEventListener(
       return;
     }
 
+    if (
+      event.target.closest(
+        ".viewer-delete"
+      )
+    ) {
+      return;
+    }
+
     toggleViewerChrome();
   }
 );
+
+
+/* =========================================================
+   PULL UI
+========================================================= */
 
 function setPullClass(
   direction,
@@ -963,7 +1638,8 @@ function setPullClass(
 
   viewerScroll.classList.toggle(
     "is-pulling-bottom",
-    direction === "bottom" &&
+    direction ===
+      "bottom" &&
       pull > 8
   );
 
@@ -976,7 +1652,8 @@ function setPullClass(
     `translate(-50%,-50%) scale(${
       Math.min(
         1.06,
-        0.94 + pull / 400
+        0.94 +
+          pull / 400
       )
     })`;
 }
@@ -997,21 +1674,23 @@ function resetPullClass() {
 
 viewerScroll.addEventListener(
   "touchstart",
-  e => {
+  event => {
     tapStart = Date.now();
 
     startBoundaryDrag(
-      e.touches[0].clientY
+      event.touches[0].clientY
     );
   },
-  { passive: true }
+  {
+    passive: true
+  }
 );
 
 viewerScroll.addEventListener(
   "touchmove",
-  e => {
+  event => {
     updateBoundaryDrag(
-      e.touches[0].clientY
+      event.touches[0].clientY
     );
 
     if (
@@ -1019,15 +1698,21 @@ viewerScroll.addEventListener(
       dragStartY != null
     ) {
       const delta =
-        e.touches[0].clientY -
+        event.touches[0].clientY -
         dragStartY;
 
       const atTop =
         activeIndex === 0;
 
       const pull = atTop
-        ? Math.max(0, delta)
-        : Math.max(0, -delta);
+        ? Math.max(
+            0,
+            delta
+          )
+        : Math.max(
+            0,
+            -delta
+          );
 
       boundaryPull = pull;
 
@@ -1039,21 +1724,26 @@ viewerScroll.addEventListener(
       );
     }
   },
-  { passive: true }
+  {
+    passive: true
+  }
 );
 
 viewerScroll.addEventListener(
   "touchend",
-  e => {
+  event => {
     endBoundaryDrag(
-      e.changedTouches[0].clientY
+      event.changedTouches[0]
+        .clientY
     );
 
     boundaryPull = 0;
 
     resetPullClass();
   },
-  { passive: true }
+  {
+    passive: true
+  }
 );
 
 viewer.addEventListener(
@@ -1063,8 +1753,15 @@ viewer.addEventListener(
       showViewerChrome();
     }
   },
-  { passive: true }
+  {
+    passive: true
+  }
 );
+
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
 
 renderGallery();
 loadMemories();
