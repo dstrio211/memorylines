@@ -8,9 +8,7 @@
   --ease:cubic-bezier(.22,1,.36,1);
 }
 
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 html{
   background:var(--paper);
@@ -24,12 +22,12 @@ body{
   background:
     radial-gradient(
       900px 600px at 5% 0%,
-      rgba(233,166,190,.08),
+      rgba(233,166,190,.10),
       transparent 60%
     ),
     radial-gradient(
       800px 650px at 100% 25%,
-      rgba(168,201,181,.09),
+      rgba(168,201,181,.11),
       transparent 60%
     ),
     var(--paper);
@@ -54,29 +52,18 @@ button{
   -webkit-tap-highlight-color:transparent;
 }
 
-
-/* =========================================================
-   MAIN SHELL
-   ========================================================= */
-
 .site-shell{
   width:min(100%,1280px);
-  margin:0 auto;
-  padding:0 22px 60px;
+  margin:auto;
+  padding:0 22px 80px;
 }
 
-
-/* =========================================================
-   HERO
-   ========================================================= */
-
 .hero{
-  min-height:min(760px,86vh);
+  min-height:min(820px,88vh);
   padding:
     max(30px,calc(18px + env(safe-area-inset-top)))
     0
-    58px;
-
+    74px;
   display:flex;
   flex-direction:column;
 }
@@ -91,6 +78,7 @@ button{
 
 .hero-top{
   justify-content:space-between;
+  gap:20px;
 }
 
 .micro{
@@ -103,12 +91,16 @@ button{
 .status{
   display:flex;
   align-items:center;
+  justify-content:flex-end;
   gap:7px;
+  flex-shrink:0;
+  white-space:nowrap;
 }
 
 .status i{
   width:6px;
   height:6px;
+  flex:0 0 6px;
   border-radius:50%;
   background:var(--green);
   box-shadow:
@@ -152,7 +144,7 @@ h2 em{
 
 .hero-meta{
   gap:14px;
-  margin-top:42px;
+  margin-top:48px;
   color:rgba(23,23,22,.48);
   font-size:clamp(10px,2.5vw,10.5px);
   letter-spacing:.18em;
@@ -164,18 +156,14 @@ h2 em{
   background:var(--hair);
 }
 
-
-/* =========================================================
-   GALLERY
-   ========================================================= */
-
 .gallery-section{
-  padding-top:24px;
+  padding-top:38px;
 }
 
 .section-head{
   justify-content:space-between;
   align-items:flex-end;
+  gap:20px;
   padding:0 3px 22px;
 }
 
@@ -192,6 +180,7 @@ h2 em{
   color:var(--soft);
   font-size:clamp(11px,2.7vw,12px);
   line-height:1.5;
+  flex-shrink:0;
 }
 
 .gallery{
@@ -256,42 +245,9 @@ h2 em{
   transform:scale(.985);
 }
 
-@keyframes tileIn{
-  from{
-    opacity:0;
-    transform:translateY(12px);
-  }
-  to{
-    opacity:1;
-    transform:none;
-  }
-}
-
-.empty-state{
-  padding:42px 10px;
-  text-align:center;
-  color:var(--soft);
-}
-
-.empty-state span{
-  display:block;
-  font-size:14px;
-}
-
-.empty-state small{
-  display:block;
-  margin-top:7px;
-  font-size:11px;
-}
-
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
 .footer{
   justify-content:space-between;
-  padding:60px 3px 20px;
+  padding:70px 3px 20px;
   color:rgba(23,23,22,.42);
   font-size:clamp(10px,2.5vw,10.5px);
   letter-spacing:.18em;
@@ -299,18 +255,16 @@ h2 em{
 
 
 /* =========================================================
-   ADD MEMORY BUTTON
-   ========================================================= */
+   LIQUID GLASS ADD BUTTON
+========================================================= */
 
 .glass-add{
   position:fixed;
   z-index:30;
-
   right:max(
     20px,
     calc((100vw - 1280px)/2 + 20px)
   );
-
   bottom:max(
     20px,
     calc(18px + env(safe-area-inset-bottom))
@@ -391,7 +345,6 @@ h2 em{
 
 .glass-add:hover{
   transform:translateY(-4px) scale(1.02);
-
   box-shadow:
     0 22px 52px rgba(25,24,22,.17),
     inset 0 1px rgba(255,255,255,.95);
@@ -400,16 +353,6 @@ h2 em{
 .glass-add:active{
   transform:scale(.93);
 }
-
-.glass-add:disabled{
-  opacity:.5;
-  cursor:wait;
-}
-
-
-/* =========================================================
-   DESKTOP ADD BUTTON
-   ========================================================= */
 
 @media(min-width:1000px){
 
@@ -425,7 +368,6 @@ h2 em{
     overflow:hidden;
     white-space:nowrap;
     opacity:0;
-
     transition:
       max-width .65s var(--ease),
       opacity .35s ease;
@@ -446,7 +388,7 @@ h2 em{
 
 /* =========================================================
    IMMERSIVE VIEWER
-   ========================================================= */
+========================================================= */
 
 .viewer{
   position:fixed;
@@ -454,10 +396,8 @@ h2 em{
   inset:0;
   background:#0e0e0e;
   color:white;
-
   opacity:0;
   pointer-events:none;
-
   transition:opacity .5s ease;
 }
 
@@ -469,14 +409,11 @@ h2 em{
 .viewer-backdrop{
   position:absolute;
   inset:-8%;
-
   background-position:center;
   background-size:cover;
-
   filter:blur(34px) saturate(75%);
   transform:scale(1.09);
   opacity:.44;
-
   transition:
     background-image .75s ease,
     opacity .5s ease,
@@ -493,15 +430,11 @@ h2 em{
 .viewer-scroll{
   position:relative;
   z-index:2;
-
   height:100%;
   width:100%;
-
   overflow-y:auto;
-
   overscroll-behavior-y:none;
   scroll-snap-type:y mandatory;
-
   scrollbar-width:none;
 }
 
@@ -511,15 +444,11 @@ h2 em{
 
 .viewer-card{
   min-height:100svh;
-
   display:grid;
   place-items:center;
-
   padding:64px 22px 78px;
-
   scroll-snap-align:start;
   scroll-snap-stop:always;
-
   position:relative;
 }
 
@@ -527,39 +456,280 @@ h2 em{
   position:relative;
   max-width:100%;
   max-height:calc(100svh - 132px);
-
   display:flex;
   align-items:center;
   justify-content:center;
-
-  filter:
-    drop-shadow(
-      0 25px 55px rgba(0,0,0,.24)
-    );
-
+  filter:drop-shadow(0 25px 55px rgba(0,0,0,.24));
   animation:viewerIn .72s var(--ease) both;
-
   transition:
     transform .36s var(--ease),
     opacity .36s ease,
     filter .36s ease;
 }
 
+.viewer-card.is-active .viewer-photo-wrap{
+  animation:none;
+}
+
 .viewer-photo{
   display:block;
-
   max-width:min(94vw,1200px);
   max-height:calc(100svh - 132px);
-
   width:auto;
   height:auto;
-
   object-fit:contain;
   border-radius:2px;
 }
 
-.viewer-card.is-active .viewer-photo-wrap{
-  animation:none;
+.viewer-title{
+  position:absolute;
+  left:50%;
+  bottom:28px;
+  transform:translateX(-50%);
+
+  max-width:min(82%,720px);
+
+  padding:7px 14px 10px;
+
+  border-radius:999px;
+
+  text-align:center;
+  font-size:12px;
+  line-height:1.4;
+  letter-spacing:.02em;
+
+  color:rgba(255,255,255,.9);
+  background:rgba(8,8,8,.08);
+
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+
+  text-shadow:0 2px 22px rgba(0,0,0,.4);
+
+  z-index:1;
+
+  transition:
+    opacity .35s ease,
+    transform .35s var(--ease);
+}
+
+.viewer-card:not(.has-caption) .viewer-title{
+  display:none;
+}
+
+.viewer-card.has-caption .viewer-title{
+  animation:captionIn .62s var(--ease) both;
+}
+
+.viewer-close{
+  position:fixed;
+  z-index:5;
+
+  top:max(
+    18px,
+    calc(16px + env(safe-area-inset-top))
+  );
+
+  left:max(
+    18px,
+    env(safe-area-inset-left)
+  );
+
+  width:42px;
+  height:42px;
+
+  border-radius:50%;
+
+  display:grid;
+  place-items:center;
+
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.15);
+
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+
+  cursor:pointer;
+  touch-action:manipulation;
+}
+
+.viewer-close span{
+  position:absolute;
+  width:17px;
+  height:1.3px;
+  background:white;
+  border-radius:99px;
+}
+
+.viewer-close span:first-child{
+  transform:rotate(45deg);
+}
+
+.viewer-close span:last-child{
+  transform:rotate(-45deg);
+}
+
+.viewer-progress{
+  position:fixed;
+  z-index:5;
+
+  top:auto;
+
+  right:max(
+    21px,
+    env(safe-area-inset-right)
+  );
+
+  bottom:max(
+    22px,
+    calc(22px + env(safe-area-inset-bottom))
+  );
+
+  min-width:0;
+
+  text-align:right;
+
+  padding:7px 10px;
+
+  border-radius:999px;
+
+  font-size:10px;
+  letter-spacing:.17em;
+
+  color:rgba(255,255,255,.52);
+
+  background:rgba(0,0,0,.10);
+  border:1px solid rgba(255,255,255,.08);
+
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+
+  transition:
+    opacity .4s ease,
+    transform .4s var(--ease);
+
+  pointer-events:auto;
+}
+
+.viewer-hint{
+  position:fixed;
+  z-index:5;
+
+  left:50%;
+
+  bottom:max(
+    18px,
+    calc(18px + env(safe-area-inset-bottom))
+  );
+
+  transform:translateX(-50%);
+
+  display:flex;
+  align-items:center;
+  gap:9px;
+
+  color:rgba(255,255,255,.54);
+
+  font-size:9px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+
+  opacity:1;
+
+  white-space:nowrap;
+
+  transition:opacity .45s ease;
+
+  pointer-events:auto;
+}
+
+.viewer-hint i{
+  width:24px;
+  height:1px;
+  background:rgba(255,255,255,.36);
+  position:relative;
+}
+
+.viewer-hint i:after{
+  content:"";
+  position:absolute;
+  right:0;
+  top:-2px;
+
+  width:5px;
+  height:5px;
+
+  border-right:1px solid white;
+  border-bottom:1px solid white;
+
+  transform:rotate(45deg);
+}
+
+.viewer.has-scrolled .viewer-hint{
+  opacity:0;
+}
+
+.viewer-chrome{
+  position:fixed;
+  z-index:5;
+
+  left:50%;
+  top:max(
+    22px,
+    calc(20px + env(safe-area-inset-top))
+  );
+
+  transform:translateX(-50%);
+
+  color:rgba(255,255,255,.42);
+
+  font-size:9px;
+  font-weight:650;
+  letter-spacing:.2em;
+
+  pointer-events:none;
+
+  transition:
+    opacity .4s ease,
+    transform .4s var(--ease);
+}
+
+.viewer.is-quiet .viewer-chrome,
+.viewer.is-quiet .viewer-progress,
+.viewer.is-quiet .viewer-close{
+  opacity:0;
+}
+
+.viewer.is-quiet .viewer-close{
+  transform:translateY(-5px);
+}
+
+.viewer.is-quiet .viewer-delete{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(-5px);
+}
+
+.viewer.is-quiet .viewer-title{
+  opacity:0;
+  transform:translate(-50%,7px);
+}
+
+.viewer-scroll.is-pulling-top
+.viewer-card:first-child
+.viewer-photo-wrap,
+
+.viewer-scroll.is-pulling-bottom
+.viewer-card:last-child
+.viewer-photo-wrap{
+  transform:scale(.965);
+  opacity:.78;
+  filter:blur(.4px);
+}
+
+.viewer-scroll.is-pulling-top,
+.viewer-scroll.is-pulling-bottom{
+  cursor:grabbing;
 }
 
 @keyframes viewerIn{
@@ -576,11 +746,12 @@ h2 em{
 
 
 /* =========================================================
-   VIEWER CAPTION
-   ========================================================= */
+   VIEWER CAPTION FADE
+========================================================= */
 
 .viewer-caption-fade{
   position:absolute;
+
   left:-10%;
   right:-10%;
   bottom:-8%;
@@ -632,51 +803,6 @@ h2 em{
   transform:translateY(0);
 }
 
-.viewer-title{
-  position:absolute;
-
-  left:50%;
-  bottom:28px;
-
-  transform:translateX(-50%);
-
-  z-index:1;
-
-  max-width:min(82%,720px);
-
-  padding:7px 14px 10px;
-
-  border-radius:999px;
-
-  text-align:center;
-
-  font-size:12px;
-  line-height:1.4;
-  letter-spacing:.02em;
-
-  color:rgba(255,255,255,.9);
-
-  background:rgba(8,8,8,.08);
-
-  backdrop-filter:blur(8px);
-  -webkit-backdrop-filter:blur(8px);
-
-  text-shadow:
-    0 2px 22px rgba(0,0,0,.4);
-
-  transition:
-    opacity .35s ease,
-    transform .35s var(--ease);
-}
-
-.viewer-card:not(.has-caption) .viewer-title{
-  display:none;
-}
-
-.viewer-card.has-caption .viewer-title{
-  animation:captionIn .62s var(--ease) both;
-}
-
 @keyframes captionIn{
   from{
     opacity:0;
@@ -691,225 +817,39 @@ h2 em{
 
 
 /* =========================================================
-   VIEWER CLOSE
-   ========================================================= */
+   SHARED ELEMENT TRANSITION
+========================================================= */
 
-.viewer-close{
+.shared-transition{
   position:fixed;
-  z-index:7;
-
-  top:max(
-    18px,
-    calc(16px + env(safe-area-inset-top))
-  );
-
-  left:max(
-    18px,
-    env(safe-area-inset-left)
-  );
-
-  width:42px;
-  height:42px;
-
-  border-radius:50%;
-
-  display:grid;
-  place-items:center;
-
-  background:rgba(255,255,255,.10);
-  border:1px solid rgba(255,255,255,.15);
-
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-
-  cursor:pointer;
-
-  transition:
-    opacity .4s ease,
-    transform .3s var(--ease);
-}
-
-.viewer-close span{
-  position:absolute;
-
-  width:17px;
-  height:1.3px;
-
-  background:white;
-  border-radius:99px;
-}
-
-.viewer-close span:first-child{
-  transform:rotate(45deg);
-}
-
-.viewer-close span:last-child{
-  transform:rotate(-45deg);
-}
-
-
-/* =========================================================
-   VIEWER PROGRESS
-   ========================================================= */
-
-.viewer-progress{
-  position:fixed;
-
-  z-index:7;
-
-  right:max(
-    21px,
-    env(safe-area-inset-right)
-  );
-
-  bottom:max(
-    22px,
-    calc(22px + env(safe-area-inset-bottom))
-  );
-
-  min-width:0;
-
-  padding:7px 10px;
-
-  border-radius:999px;
-
-  text-align:right;
-
-  font-size:10px;
-  letter-spacing:.17em;
-
-  color:rgba(255,255,255,.52);
-
-  background:rgba(0,0,0,.10);
-
-  border:1px solid rgba(255,255,255,.08);
-
-  backdrop-filter:blur(12px);
-  -webkit-backdrop-filter:blur(12px);
-
-  transition:
-    opacity .4s ease,
-    transform .4s var(--ease);
-}
-
-
-/* =========================================================
-   VIEWER CHROME
-   ========================================================= */
-
-.viewer-chrome{
-  position:fixed;
-
-  z-index:6;
-
-  left:50%;
-
-  top:max(
-    22px,
-    calc(20px + env(safe-area-inset-top))
-  );
-
-  transform:translateX(-50%);
-
-  color:rgba(255,255,255,.42);
-
-  font-size:9px;
-  font-weight:650;
-  letter-spacing:.2em;
-
+  z-index:120;
+  display:none;
+  overflow:hidden;
   pointer-events:none;
-
-  transition:
-    opacity .4s ease,
-    transform .4s var(--ease);
+  border-radius:2px;
+  transform-origin:center center;
+  box-shadow:0 22px 60px rgba(0,0,0,.18);
 }
 
-.viewer.is-quiet .viewer-chrome,
-.viewer.is-quiet .viewer-progress,
-.viewer.is-quiet .viewer-close,
-.viewer.is-quiet .viewer-delete{
-  opacity:0;
+.shared-transition img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
 }
 
-.viewer.is-quiet .viewer-close,
-.viewer.is-quiet .viewer-delete{
-  transform:translateY(-5px);
-}
-
-
-/* =========================================================
-   VIEWER HINT
-   ========================================================= */
-
-.viewer-hint{
-  position:fixed;
-
-  z-index:6;
-
-  left:50%;
-
-  bottom:max(
-    18px,
-    calc(18px + env(safe-area-inset-bottom))
-  );
-
-  transform:translateX(-50%);
-
-  display:flex;
-  align-items:center;
-  gap:9px;
-
-  color:rgba(255,255,255,.54);
-
-  font-size:9px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-
-  white-space:nowrap;
-
-  opacity:1;
-
-  transition:opacity .45s ease;
-}
-
-.viewer-hint i{
-  width:24px;
-  height:1px;
-
-  background:rgba(255,255,255,.36);
-
-  position:relative;
-}
-
-.viewer-hint i:after{
-  content:"";
-
-  position:absolute;
-  right:0;
-  top:-2px;
-
-  width:5px;
-  height:5px;
-
-  border-right:1px solid white;
-  border-bottom:1px solid white;
-
-  transform:rotate(45deg);
-}
-
-.viewer.has-scrolled .viewer-hint{
-  opacity:0;
+.shared-transition.active{
+  display:block;
 }
 
 
 /* =========================================================
-   BOUNDARY / PULL TO CLOSE
-   ========================================================= */
+   VIEWER BOUNDARY
+========================================================= */
 
 .viewer-boundary{
   position:fixed;
-
-  z-index:8;
+  z-index:6;
 
   left:50%;
   top:50%;
@@ -945,33 +885,19 @@ h2 em{
 
 .viewer-boundary.visible{
   opacity:1;
-
   transform:
     translate(-50%,-50%)
     scale(1);
 }
 
-.viewer-scroll.is-pulling-top .viewer-card:first-child .viewer-photo-wrap,
-.viewer-scroll.is-pulling-bottom .viewer-card:last-child .viewer-photo-wrap{
-  transform:scale(.965);
-  opacity:.78;
-  filter:blur(.4px);
-}
-
-.viewer-scroll.is-pulling-top,
-.viewer-scroll.is-pulling-bottom{
-  cursor:grabbing;
-}
-
 
 /* =========================================================
-   DELETE BUTTON
-   ========================================================= */
+   DELETE CONTROL
+========================================================= */
 
 .viewer-delete{
   position:fixed;
-
-  z-index:8;
+  z-index:6;
 
   top:max(
     18px,
@@ -992,7 +918,6 @@ h2 em{
   place-items:center;
 
   background:rgba(255,255,255,.10);
-
   border:1px solid rgba(255,255,255,.15);
 
   backdrop-filter:blur(18px);
@@ -1000,12 +925,12 @@ h2 em{
 
   cursor:pointer;
 
-  touch-action:manipulation;
-
   transition:
     opacity .4s ease,
     transform .3s var(--ease),
     background .25s ease;
+
+  touch-action:manipulation;
 }
 
 .trash-can{
@@ -1014,14 +939,10 @@ h2 em{
   width:13px;
   height:15px;
 
-  border:
-    1.3px solid
-    rgba(255,255,255,.92);
-
+  border:1.3px solid rgba(255,255,255,.92);
   border-top:0;
 
-  border-radius:
-    2px 2px 3px 3px;
+  border-radius:2px 2px 3px 3px;
 
   margin-top:3px;
 }
@@ -1029,16 +950,13 @@ h2 em{
 .trash-can:before,
 .trash-can:after{
   content:"";
-
   position:absolute;
-
   top:3px;
 
   width:1px;
   height:8px;
 
-  background:
-    rgba(255,255,255,.72);
+  background:rgba(255,255,255,.72);
 }
 
 .trash-can:before{
@@ -1057,15 +975,13 @@ h2 em{
 
   border-radius:99px;
 
-  background:
-    rgba(255,255,255,.92);
+  background:rgba(255,255,255,.92);
 
   transform:translateY(-6px);
 }
 
 .trash-lid:after{
   content:"";
-
   position:absolute;
 
   left:5px;
@@ -1074,14 +990,10 @@ h2 em{
   width:4px;
   height:2px;
 
-  border:
-    1px solid
-    rgba(255,255,255,.88);
-
+  border:1px solid rgba(255,255,255,.88);
   border-bottom:0;
 
-  border-radius:
-    2px 2px 0 0;
+  border-radius:2px 2px 0 0;
 }
 
 .viewer-delete:hover{
@@ -1091,233 +1003,12 @@ h2 em{
 
 
 /* =========================================================
-   DELETE SHEET
-   ========================================================= */
-
-.delete-sheet{
-  position:fixed;
-
-  z-index:150;
-
-  inset:0;
-
-  display:grid;
-  align-items:end;
-
-  opacity:0;
-  pointer-events:none;
-
-  transition:opacity .38s ease;
-}
-
-.delete-sheet.open{
-  opacity:1;
-  pointer-events:auto;
-}
-
-.delete-scrim{
-  position:absolute;
-  inset:0;
-
-  background:rgba(8,8,8,.32);
-
-  backdrop-filter:blur(10px);
-  -webkit-backdrop-filter:blur(10px);
-}
-
-.delete-panel{
-  position:relative;
-
-  width:min(100%,560px);
-
-  margin:auto;
-
-  padding:
-    10px 22px
-    calc(22px + env(safe-area-inset-bottom));
-
-  border:
-    1px solid
-    rgba(255,255,255,.16);
-
-  border-bottom:0;
-
-  border-radius:
-    28px 28px 0 0;
-
-  color:#f8f7f4;
-
-  background:
-    rgba(18,18,18,.88);
-
-  backdrop-filter:blur(30px) saturate(120%);
-  -webkit-backdrop-filter:blur(30px) saturate(120%);
-
-  box-shadow:
-    0 -25px 80px rgba(0,0,0,.35);
-
-  transform:translateY(105%);
-
-  transition:
-    transform .65s var(--ease);
-}
-
-.delete-sheet.open .delete-panel{
-  transform:translateY(0);
-}
-
-.delete-panel .micro{
-  color:rgba(255,255,255,.48);
-}
-
-.delete-panel h2{
-  margin:8px 0 10px;
-
-  font-size:38px;
-  line-height:.92;
-
-  letter-spacing:-.055em;
-  font-weight:550;
-}
-
-.delete-panel h2 em{
-  color:rgba(255,255,255,.82);
-}
-
-.delete-panel>p{
-  margin:0 0 20px;
-
-  color:rgba(255,255,255,.5);
-
-  font-size:12px;
-  line-height:1.5;
-}
-
-.delete-field{
-  display:block;
-}
-
-.delete-field span{
-  display:block;
-
-  margin-bottom:7px;
-
-  font-size:9px;
-  letter-spacing:.17em;
-
-  color:rgba(255,255,255,.5);
-}
-
-.delete-field input{
-  width:100%;
-
-  padding:14px 15px;
-
-  border:
-    1px solid
-    rgba(255,255,255,.12);
-
-  border-radius:14px;
-
-  outline:none;
-
-  color:#fff;
-
-  background:
-    rgba(255,255,255,.07);
-}
-
-.delete-field input:focus{
-  border-color:
-    rgba(233,166,190,.72);
-
-  box-shadow:
-    0 0 0 4px
-    rgba(233,166,190,.10);
-}
-
-.delete-error{
-  min-height:18px;
-
-  margin-top:8px;
-
-  color:#f1b4c8;
-
-  font-size:11px;
-}
-
-.delete-actions{
-  display:grid;
-
-  grid-template-columns:
-    .82fr 1.5fr;
-
-  gap:10px;
-
-  margin-top:4px;
-}
-
-.delete-confirm{
-  height:50px;
-
-  border-radius:15px;
-
-  cursor:pointer;
-
-  color:#211;
-
-  background:
-    linear-gradient(
-      110deg,
-      rgba(233,166,190,.92),
-      rgba(241,203,211,.90)
-    );
-
-  border:
-    1px solid
-    rgba(255,255,255,.10);
-}
-
-.delete-actions .ghost-button{
-  height:50px;
-
-  color:rgba(255,255,255,.88);
-
-  background:
-    rgba(255,255,255,.09);
-
-  border:
-    1px solid
-    rgba(255,255,255,.14);
-
-  box-shadow:
-    inset 0 1px
-    rgba(255,255,255,.08);
-}
-
-.delete-actions .ghost-button:hover{
-  background:
-    rgba(255,255,255,.14);
-
-  border-color:
-    rgba(255,255,255,.20);
-}
-
-.delete-confirm:active,
-.ghost-button:active{
-  transform:scale(.98);
-}
-
-
-/* =========================================================
    UPLOAD SHEET
-   ========================================================= */
+========================================================= */
 
 .sheet{
   position:fixed;
-
   z-index:100;
-
   inset:0;
 
   display:grid;
@@ -1338,8 +1029,7 @@ h2 em{
   position:absolute;
   inset:0;
 
-  background:
-    rgba(25,24,22,.20);
+  background:rgba(25,24,22,.20);
 
   backdrop-filter:blur(9px);
   -webkit-backdrop-filter:blur(9px);
@@ -1349,38 +1039,28 @@ h2 em{
   position:relative;
 
   width:min(100%,680px);
-
   margin:auto;
 
   padding:
-    9px 22px
+    9px
+    22px
     calc(22px + env(safe-area-inset-bottom));
 
-  border:
-    1px solid
-    rgba(255,255,255,.72);
-
+  border:1px solid rgba(255,255,255,.72);
   border-bottom:0;
 
-  border-radius:
-    30px 30px 0 0;
+  border-radius:30px 30px 0 0;
 
-  background:
-    rgba(247,246,243,.88);
+  background:rgba(247,246,243,.88);
 
-  backdrop-filter:
-    blur(32px) saturate(135%);
+  backdrop-filter:blur(32px) saturate(135%);
+  -webkit-backdrop-filter:blur(32px) saturate(135%);
 
-  -webkit-backdrop-filter:
-    blur(32px) saturate(135%);
-
-  box-shadow:
-    0 -25px 80px rgba(0,0,0,.15);
+  box-shadow:0 -25px 80px rgba(0,0,0,.15);
 
   transform:translateY(105%);
 
-  transition:
-    transform .72s var(--ease);
+  transition:transform .72s var(--ease);
 }
 
 .sheet.open .sheet-panel{
@@ -1393,11 +1073,9 @@ h2 em{
 
   border-radius:99px;
 
-  background:
-    rgba(23,23,22,.13);
+  background:rgba(23,23,22,.13);
 
-  margin:
-    3px auto 25px;
+  margin:3px auto 25px;
 }
 
 .sheet-header{
@@ -1411,7 +1089,6 @@ h2 em{
 
   font-size:36px;
   line-height:.94;
-
   letter-spacing:-.055em;
   font-weight:550;
 }
@@ -1422,8 +1099,7 @@ h2 em{
 
   border-radius:50%;
 
-  background:
-    rgba(23,23,22,.06);
+  background:rgba(23,23,22,.06);
 
   font-size:22px;
 
@@ -1433,22 +1109,17 @@ h2 em{
 .upload-zone{
   min-height:165px;
 
-  border:
-    1px dashed
-    rgba(23,23,22,.16);
-
+  border:1px dashed rgba(23,23,22,.16);
   border-radius:22px;
 
   display:grid;
   place-items:center;
   align-content:center;
-
   gap:7px;
 
   text-align:center;
 
-  background:
-    rgba(255,255,255,.26);
+  background:rgba(255,255,255,.26);
 
   cursor:pointer;
 
@@ -1458,11 +1129,8 @@ h2 em{
 }
 
 .upload-zone:hover{
-  background:
-    rgba(255,255,255,.46);
-
-  border-color:
-    rgba(23,23,22,.25);
+  background:rgba(255,255,255,.46);
+  border-color:rgba(23,23,22,.25);
 }
 
 .upload-zone input{
@@ -1504,7 +1172,6 @@ h2 em{
   max-height:240px;
 
   border-radius:20px;
-
   overflow:hidden;
 
   background:#dfdcd6;
@@ -1526,7 +1193,6 @@ h2 em{
 
 .title-field span{
   display:block;
-
   margin-bottom:7px;
 
   font-size:9px;
@@ -1540,34 +1206,25 @@ h2 em{
 
   padding:14px 15px;
 
-  border:
-    1px solid
-    var(--hair);
-
+  border:1px solid var(--hair);
   border-radius:14px;
 
   outline:0;
 
-  background:
-    rgba(255,255,255,.48);
-
+  background:rgba(255,255,255,.48);
   color:var(--ink);
 }
 
 .title-field input:focus{
-  border-color:
-    rgba(233,166,190,.8);
+  border-color:rgba(233,166,190,.8);
 
   box-shadow:
-    0 0 0 4px
-    rgba(233,166,190,.12);
+    0 0 0 4px rgba(233,166,190,.12);
 }
 
 .sheet-actions{
   display:grid;
-
-  grid-template-columns:
-    .7fr 1.5fr;
+  grid-template-columns:.7fr 1.5fr;
 
   gap:9px;
 
@@ -1577,16 +1234,12 @@ h2 em{
 .ghost-button,
 .save-button{
   height:50px;
-
   border-radius:15px;
-
   cursor:pointer;
 }
 
 .ghost-button{
-  background:
-    rgba(23,23,22,.06);
-
+  background:rgba(23,23,22,.06);
   color:var(--ink);
 }
 
@@ -1611,45 +1264,195 @@ h2 em{
 
 
 /* =========================================================
-   SHARED TRANSITION
-   ========================================================= */
+   DELETE SHEET
+========================================================= */
 
-.shared-transition{
+.delete-sheet{
   position:fixed;
+  z-index:150;
+  inset:0;
 
-  z-index:120;
+  display:grid;
+  align-items:end;
 
-  display:none;
-
-  overflow:hidden;
-
+  opacity:0;
   pointer-events:none;
 
-  border-radius:2px;
+  transition:opacity .38s ease;
+}
 
-  transform-origin:center center;
+.delete-sheet.open{
+  opacity:1;
+  pointer-events:auto;
+}
+
+.delete-scrim{
+  position:absolute;
+  inset:0;
+
+  background:rgba(8,8,8,.32);
+
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+
+.delete-panel{
+  position:relative;
+
+  width:min(100%,560px);
+  margin:auto;
+
+  padding:
+    10px
+    22px
+    calc(22px + env(safe-area-inset-bottom));
+
+  border:1px solid rgba(255,255,255,.16);
+  border-bottom:0;
+
+  border-radius:28px 28px 0 0;
+
+  color:#f8f7f4;
+  background:rgba(18,18,18,.88);
+
+  backdrop-filter:blur(30px) saturate(120%);
+  -webkit-backdrop-filter:blur(30px) saturate(120%);
+
+  box-shadow:0 -25px 80px rgba(0,0,0,.35);
+
+  transform:translateY(105%);
+
+  transition:transform .65s var(--ease);
+}
+
+.delete-sheet.open .delete-panel{
+  transform:translateY(0);
+}
+
+.delete-panel .micro{
+  color:rgba(255,255,255,.48);
+}
+
+.delete-panel h2{
+  margin:8px 0 10px;
+
+  font-size:38px;
+  line-height:.92;
+  letter-spacing:-.055em;
+  font-weight:550;
+}
+
+.delete-panel h2 em{
+  color:rgba(255,255,255,.82);
+}
+
+.delete-panel>p{
+  margin:0 0 20px;
+
+  color:rgba(255,255,255,.5);
+
+  font-size:12px;
+  line-height:1.5;
+}
+
+.delete-field{
+  display:block;
+}
+
+.delete-field span{
+  display:block;
+  margin-bottom:7px;
+
+  font-size:9px;
+  letter-spacing:.17em;
+
+  color:rgba(255,255,255,.5);
+}
+
+.delete-field input{
+  width:100%;
+
+  padding:14px 15px;
+
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+
+  outline:none;
+
+  color:#fff;
+  background:rgba(255,255,255,.07);
+}
+
+.delete-field input:focus{
+  border-color:rgba(233,166,190,.72);
 
   box-shadow:
-    0 22px 60px rgba(0,0,0,.18);
+    0 0 0 4px rgba(233,166,190,.10);
 }
 
-.shared-transition img{
-  width:100%;
-  height:100%;
+.delete-error{
+  min-height:18px;
 
-  display:block;
+  margin-top:8px;
 
-  object-fit:cover;
+  color:#f1b4c8;
+
+  font-size:11px;
 }
 
-.shared-transition.active{
-  display:block;
+.delete-actions{
+  display:grid;
+  grid-template-columns:.82fr 1.5fr;
+
+  gap:10px;
+
+  margin-top:4px;
+}
+
+.delete-confirm{
+  height:50px;
+
+  border-radius:15px;
+
+  cursor:pointer;
+
+  color:#211;
+
+  background:
+    linear-gradient(
+      110deg,
+      rgba(233,166,190,.92),
+      rgba(241,203,211,.90)
+    );
+
+  border:1px solid rgba(255,255,255,.10);
+}
+
+.delete-actions .ghost-button{
+  color:rgba(255,255,255,.88);
+
+  background:rgba(255,255,255,.09);
+
+  border:1px solid rgba(255,255,255,.14);
+
+  box-shadow:
+    inset 0 1px rgba(255,255,255,.08);
+}
+
+.delete-actions .ghost-button:hover{
+  background:rgba(255,255,255,.14);
+  border-color:rgba(255,255,255,.20);
+}
+
+.delete-confirm:active,
+.ghost-button:active{
+  transform:scale(.98);
 }
 
 
 /* =========================================================
    DESKTOP
-   ========================================================= */
+========================================================= */
 
 @media(min-width:720px){
 
@@ -1665,143 +1468,130 @@ h2 em{
 
 
 /* =========================================================
-   MOBILE
-   IMPORTANT:
-   Removed the old 740px minimum hero height.
-   ========================================================= */
+   MOBILE / iOS FIX
+========================================================= */
 
 @media(max-width:600px){
 
-  html,
-  body{
-    background:var(--paper);
-  }
-
   .site-shell{
-    width:100%;
-    max-width:none;
+    padding-left:max(
+      10px,
+      env(safe-area-inset-left)
+    );
 
-    margin:0;
+    padding-right:max(
+      10px,
+      env(safe-area-inset-right)
+    );
 
-    /*
-      Only horizontal padding.
-      No fake frame / top spacing.
-    */
-    padding:
-      0
-      max(10px,env(safe-area-inset-left))
-      48px
-      max(10px,env(safe-area-inset-right));
+    padding-bottom:70px;
   }
 
   .hero{
+    min-height:740px;
 
-    /*
-      THIS fixes the giant empty area.
-    */
-    min-height:0;
-    height:auto;
+    padding-top:max(
+      24px,
+      calc(18px + env(safe-area-inset-top))
+    );
 
-    padding:
-      max(20px,calc(16px + env(safe-area-inset-top)))
-      8px
-      30px;
-
-    display:flex;
-    flex-direction:column;
+    padding-left:8px;
+    padding-right:8px;
+    padding-bottom:50px;
   }
 
+
+  /*
+   * IMPORTANT:
+   * PRIVATE COLLECTION WAS PREVIOUSLY display:none.
+   * Keep it visible on mobile.
+   */
+
   .hero-top{
+    width:100%;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:14px;
     padding-right:2px;
   }
 
+  .hero-top>.micro:first-child{
+    max-width:45%;
+  }
+
   .status{
-    display:none;
+    display:flex;
+    max-width:52%;
+    font-size:9px;
+    line-height:1.35;
+    letter-spacing:.16em;
+    text-align:right;
   }
 
-  .hero-copy{
-
-    /*
-      No auto pushing on mobile.
-      Content sits naturally.
-    */
-    margin-top:58px;
-
-    max-width:none;
+  .status i{
+    width:5px;
+    height:5px;
+    flex-basis:5px;
   }
 
-  .kicker{
-    margin-bottom:18px;
-  }
-
-  h1{
-    font-size:
-      clamp(46px,13vw,72px);
-
-    line-height:.89;
-  }
 
   .lede{
-    max-width:none;
-
     font-size:14px;
-
-    line-height:1.6;
-
-    margin-top:25px;
+    margin-top:24px;
   }
 
   .hero-meta{
-    margin-top:32px;
-
+    margin-top:35px;
     gap:10px;
-
-    flex-wrap:nowrap;
   }
 
   .meta-line{
     width:44px;
-    flex:0 0 44px;
   }
 
-  .gallery-section{
-    padding-top:26px;
-  }
+
+  /*
+   * IMPORTANT:
+   * "Scroll slowly / There is no rush."
+   * was previously display:none.
+   * Keep it visible on mobile.
+   */
 
   .section-head{
-    padding:
-      0
-      2px
-      16px;
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:end;
+    gap:14px;
+    padding:0 2px 16px;
   }
 
   .section-head p{
-    display:none;
+    display:block;
+    margin:0;
+    max-width:118px;
+    text-align:right;
+    color:var(--soft);
+    font-size:10px;
+    line-height:1.45;
   }
 
   .section-head h2{
-    font-size:
-      clamp(30px,8vw,42px);
+    font-size:clamp(30px,9vw,40px);
   }
+
 
   .gallery{
     gap:4px;
   }
 
   .footer{
-    padding-top:48px;
+    padding-top:52px;
   }
 
-  .glass-add{
-    right:max(
-      20px,
-      calc(20px + env(safe-area-inset-right))
-    );
 
-    bottom:max(
-      20px,
-      calc(20px + env(safe-area-inset-bottom))
-    );
+  .sheet-panel{
+    padding-left:16px;
+    padding-right:16px;
   }
 
   .viewer-card{
@@ -1811,6 +1601,26 @@ h2 em{
 
   .viewer-photo{
     max-width:96vw;
+  }
+
+  .viewer-caption-fade{
+    left:-13%;
+    right:-13%;
+
+    height:clamp(
+      86px,
+      19%,
+      175px
+    );
+
+    backdrop-filter:blur(11px) saturate(.84);
+    -webkit-backdrop-filter:blur(11px) saturate(.84);
+  }
+
+  .viewer-title{
+    max-width:88%;
+    font-size:12px;
+    padding:7px 12px 9px;
   }
 
   .viewer-close,
@@ -1833,91 +1643,99 @@ h2 em{
     font-size:10px;
     letter-spacing:.14em;
 
-    padding:
-      6px 9px;
-  }
-
-  .viewer-caption-fade{
-    left:-13%;
-    right:-13%;
-
-    height:
-      clamp(86px,19%,175px);
-
-    backdrop-filter:
-      blur(11px) saturate(.84);
-
-    -webkit-backdrop-filter:
-      blur(11px) saturate(.84);
-  }
-
-  .viewer-title{
-    max-width:88%;
-
-    font-size:12px;
-
-    padding:
-      7px 12px 9px;
-  }
-
-  .sheet-panel{
-    padding-left:16px;
-    padding-right:16px;
+    padding:6px 9px;
   }
 
   .delete-panel{
     padding-left:16px;
     padding-right:16px;
   }
+}
 
-  .delete-panel h2{
-    font-size:36px;
+
+/*
+ * Extra-small iPhones.
+ * Prevent the two top labels from touching each other.
+ */
+
+@media(max-width:370px){
+
+  .hero-top{
+    gap:10px;
+  }
+
+  .hero-top>.micro:first-child{
+    font-size:8.5px;
+    letter-spacing:.15em;
+    max-width:43%;
+  }
+
+  .status{
+    font-size:8px;
+    letter-spacing:.13em;
+    max-width:55%;
+  }
+
+  .section-head{
+    grid-template-columns:minmax(0,1fr) 105px;
+    gap:10px;
+  }
+
+  .section-head p{
+    font-size:9.5px;
   }
 }
 
 
 /* =========================================================
-   VERY SMALL PHONES
-   ========================================================= */
+   SAFE AREA
+========================================================= */
 
-@media(max-width:380px){
+@supports(padding:max(0px)){
 
   .site-shell{
-    padding-left:8px;
-    padding-right:8px;
+    padding-left:max(
+      22px,
+      env(safe-area-inset-left)
+    );
+
+    padding-right:max(
+      22px,
+      env(safe-area-inset-right)
+    );
+  }
+
+  .gallery-section{
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+}
+
+@media(max-width:600px){
+
+  .site-shell{
+    padding-left:max(
+      10px,
+      env(safe-area-inset-left)
+    );
+
+    padding-right:max(
+      10px,
+      env(safe-area-inset-right)
+    );
   }
 
   .hero{
-    padding-left:6px;
-    padding-right:6px;
-  }
-
-  .hero-copy{
-    margin-top:48px;
-  }
-
-  h1{
-    font-size:44px;
-  }
-
-  .lede{
-    font-size:13.5px;
-  }
-
-  .hero-meta{
-    font-size:9px;
-  }
-
-  .meta-line{
-    width:34px;
-    flex-basis:34px;
+    padding-top:max(
+      24px,
+      calc(18px + env(safe-area-inset-top))
+    );
   }
 }
 
 
 /* =========================================================
    REDUCED MOTION
-   ========================================================= */
+========================================================= */
 
 @media(prefers-reduced-motion:reduce){
 
@@ -1940,96 +1758,12 @@ h2 em{
 
 
 /* =========================================================
-   VIEWER MEDIA
-   ========================================================= */
+   VIEWER DESKTOP SNAP
+========================================================= */
 
 @media(min-width:700px){
 
   .viewer-scroll{
     scroll-snap-type:y mandatory;
-  }
-}
-
-
-/* =========================================================
-   SAFE AREA
-   ========================================================= */
-
-@supports(padding:max(0px)){
-
-  .site-shell{
-    padding-left:
-      max(22px,env(safe-area-inset-left));
-
-    padding-right:
-      max(22px,env(safe-area-inset-right));
-  }
-
-  .gallery-section{
-    padding-bottom:
-      env(safe-area-inset-bottom);
-  }
-
-}
-
-@media(max-width:600px){
-
-  .site-shell{
-    padding-left:
-      max(10px,env(safe-area-inset-left));
-
-    padding-right:
-      max(10px,env(safe-area-inset-right));
-
-    padding-bottom:
-      calc(48px + env(safe-area-inset-bottom));
-  }
-}
-
-
-/* =========================================================
-   TOUCH
-   ========================================================= */
-
-.viewer-close,
-.viewer-delete{
-  touch-action:manipulation;
-}
-
-
-/* =========================================================
-   FINAL MOBILE POLISH
-   ========================================================= */
-
-@media(max-width:600px){
-
-  /*
-    Keeps the top of the page clean and flat.
-  */
-  body{
-    background:var(--paper);
-  }
-
-  /*
-    Much smaller gap between hero and archive.
-  */
-  .gallery-section{
-    margin-top:0;
-  }
-
-  /*
-    Prevents accidental horizontal overflow.
-  */
-  .hero,
-  .gallery-section,
-  .footer{
-    max-width:100%;
-  }
-
-  /*
-    Slightly tighter gallery positioning.
-  */
-  .gallery{
-    width:100%;
   }
 }
