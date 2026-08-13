@@ -5,8 +5,8 @@
  * and browser-safe Publishable key. Never put a Secret / service_role key here.
  */
 window.MEMORY_GALLERY_SUPABASE = {
-  url: "YOUR_SUPABASE_PROJECT_URL",
-  publishableKey: "YOUR_SUPABASE_PUBLISHABLE_KEY",
+  url: "https://vngiramaaykekrlsiatn.supabase.co",
+  publishableKey: "sb_publishable_Rt2EH1MNuhqbTniTy82QgA_Zaau4dy2",
   bucket: "memories",
   table: "memories"
 };
