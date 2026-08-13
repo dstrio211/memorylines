@@ -8,7 +8,9 @@
   --ease:cubic-bezier(.22,1,.36,1);
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 html{
   background:var(--paper);
@@ -20,15 +22,32 @@ body{
   min-height:100vh;
   color:var(--ink);
   background:
-    radial-gradient(900px 600px at 5% 0%,rgba(233,166,190,.10),transparent 60%),
-    radial-gradient(800px 650px at 100% 25%,rgba(168,201,181,.11),transparent 60%),
+    radial-gradient(
+      900px 600px at 5% 0%,
+      rgba(233,166,190,.10),
+      transparent 60%
+    ),
+    radial-gradient(
+      800px 650px at 100% 25%,
+      rgba(168,201,181,.11),
+      transparent 60%
+    ),
     var(--paper);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    "Segoe UI",
+    sans-serif;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
 
-button,input{font:inherit}
+button,
+input{
+  font:inherit;
+}
 
 button{
   border:0;
@@ -41,9 +60,16 @@ button{
   padding:0 22px 80px;
 }
 
+/* =========================================================
+   HERO
+========================================================= */
+
 .hero{
   min-height:min(820px,88vh);
-  padding:max(30px,calc(18px + env(safe-area-inset-top))) 0 74px;
+  padding:
+    max(30px,calc(18px + env(safe-area-inset-top)))
+    0
+    74px;
   display:flex;
   flex-direction:column;
 }
@@ -130,6 +156,10 @@ h2 em{
   background:var(--hair);
 }
 
+/* =========================================================
+   GALLERY
+========================================================= */
+
 .gallery-section{
   padding-top:38px;
 }
@@ -186,14 +216,21 @@ h2 em{
   height:100%;
   display:block;
   object-fit:cover;
-  transition:transform 1.2s var(--ease),filter .7s ease;
+  transition:
+    transform 1.2s var(--ease),
+    filter .7s ease;
 }
 
 .tile:after{
   content:"";
   position:absolute;
   inset:0;
-  background:linear-gradient(180deg,transparent 58%,rgba(0,0,0,.14));
+  background:
+    linear-gradient(
+      180deg,
+      transparent 58%,
+      rgba(0,0,0,.14)
+    );
   opacity:0;
   transition:opacity .5s ease;
 }
@@ -218,16 +255,21 @@ h2 em{
   letter-spacing:.18em;
 }
 
-
-/* =========================================
-   LIQUID GLASS ADD BUTTON
-========================================= */
+/* =========================================================
+   ADD BUTTON
+========================================================= */
 
 .glass-add{
   position:fixed;
   z-index:30;
-  right:max(20px,calc((100vw - 1280px)/2 + 20px));
-  bottom:max(20px,calc(18px + env(safe-area-inset-bottom)));
+  right:max(
+    20px,
+    calc((100vw - 1280px)/2 + 20px)
+  );
+  bottom:max(
+    20px,
+    calc(18px + env(safe-area-inset-bottom))
+  );
   height:58px;
   width:58px;
   border-radius:50%;
@@ -239,8 +281,16 @@ h2 em{
   padding:0;
   border:1px solid rgba(255,255,255,.72);
   background:
-    radial-gradient(circle at 28% 18%,rgba(255,255,255,.92),transparent 27%),
-    linear-gradient(135deg,rgba(255,255,255,.62),rgba(255,255,255,.23));
+    radial-gradient(
+      circle at 28% 18%,
+      rgba(255,255,255,.92),
+      transparent 27%
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255,255,255,.62),
+      rgba(255,255,255,.23)
+    );
   backdrop-filter:blur(24px) saturate(155%);
   -webkit-backdrop-filter:blur(24px) saturate(155%);
   box-shadow:
@@ -328,10 +378,9 @@ h2 em{
   }
 }
 
-
-/* =========================================
+/* =========================================================
    IMMERSIVE VIEWER
-========================================= */
+========================================================= */
 
 .viewer{
   position:fixed;
@@ -420,6 +469,10 @@ h2 em{
   border-radius:2px;
 }
 
+.viewer-card.is-active .viewer-photo-wrap{
+  animation:none;
+}
+
 .viewer-title{
   position:absolute;
   left:50%;
@@ -427,12 +480,12 @@ h2 em{
   transform:translateX(-50%);
   max-width:min(82%,720px);
   padding:7px 14px 10px;
+  border-radius:999px;
   text-align:center;
   font-size:12px;
   line-height:1.4;
   letter-spacing:.02em;
   color:rgba(255,255,255,.9);
-  border-radius:999px;
   background:rgba(8,8,8,.08);
   backdrop-filter:blur(8px);
   -webkit-backdrop-filter:blur(8px);
@@ -451,11 +504,33 @@ h2 em{
   animation:captionIn .62s var(--ease) both;
 }
 
+.viewer.is-quiet .viewer-title{
+  opacity:0;
+  transform:translate(-50%,7px);
+}
+
+@keyframes captionIn{
+  from{
+    opacity:0;
+    transform:translate(-50%,10px);
+  }
+  to{
+    opacity:1;
+    transform:translate(-50%,0);
+  }
+}
+
 .viewer-close{
   position:fixed;
   z-index:5;
-  top:max(18px,calc(16px + env(safe-area-inset-top)));
-  left:max(18px,env(safe-area-inset-left));
+  top:max(
+    18px,
+    calc(16px + env(safe-area-inset-top))
+  );
+  left:max(
+    18px,
+    env(safe-area-inset-left)
+  );
   width:42px;
   height:42px;
   border-radius:50%;
@@ -487,8 +562,15 @@ h2 em{
 .viewer-progress{
   position:fixed;
   z-index:5;
-  right:max(21px,env(safe-area-inset-right));
-  bottom:max(22px,calc(22px + env(safe-area-inset-bottom)));
+  top:auto;
+  right:max(
+    21px,
+    env(safe-area-inset-right)
+  );
+  bottom:max(
+    22px,
+    calc(22px + env(safe-area-inset-bottom))
+  );
   min-width:0;
   text-align:right;
   padding:7px 10px;
@@ -509,7 +591,10 @@ h2 em{
   position:fixed;
   z-index:5;
   left:50%;
-  bottom:max(18px,calc(18px + env(safe-area-inset-bottom)));
+  bottom:max(
+    18px,
+    calc(18px + env(safe-area-inset-bottom))
+  );
   transform:translateX(-50%);
   display:flex;
   align-items:center;
@@ -521,6 +606,7 @@ h2 em{
   opacity:1;
   transition:opacity .45s ease;
   white-space:nowrap;
+  pointer-events:auto;
 }
 
 .viewer-hint i{
@@ -546,6 +632,127 @@ h2 em{
   opacity:0;
 }
 
+.viewer-chrome{
+  position:fixed;
+  z-index:5;
+  left:50%;
+  top:max(
+    22px,
+    calc(20px + env(safe-area-inset-top))
+  );
+  transform:translateX(-50%);
+  color:rgba(255,255,255,.42);
+  font-size:9px;
+  font-weight:650;
+  letter-spacing:.2em;
+  pointer-events:none;
+  transition:
+    opacity .4s ease,
+    transform .4s var(--ease);
+}
+
+.viewer.is-quiet .viewer-chrome,
+.viewer.is-quiet .viewer-progress,
+.viewer.is-quiet .viewer-close{
+  opacity:0;
+}
+
+.viewer.is-quiet .viewer-close{
+  transform:translateY(-5px);
+}
+
+.viewer-scroll.is-pulling-top
+.viewer-card:first-child
+.viewer-photo-wrap,
+.viewer-scroll.is-pulling-bottom
+.viewer-card:last-child
+.viewer-photo-wrap{
+  transform:scale(.965);
+  opacity:.78;
+  filter:blur(.4px);
+}
+
+.viewer-scroll.is-pulling-top,
+.viewer-scroll.is-pulling-bottom{
+  cursor:grabbing;
+}
+
+.viewer-boundary{
+  position:fixed;
+  z-index:6;
+  left:50%;
+  top:50%;
+  transform:
+    translate(-50%,-50%)
+    scale(.94);
+  padding:10px 15px;
+  border-radius:999px;
+  color:rgba(255,255,255,.88);
+  background:rgba(255,255,255,.11);
+  border:1px solid rgba(255,255,255,.13);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  font-size:10px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  opacity:0;
+  pointer-events:none;
+  transition:
+    opacity .2s ease,
+    transform .3s var(--ease);
+}
+
+.viewer-boundary.visible{
+  opacity:1;
+  transform:
+    translate(-50%,-50%)
+    scale(1);
+}
+
+.viewer-caption-fade{
+  position:absolute;
+  left:-10%;
+  right:-10%;
+  bottom:-8%;
+  z-index:-1;
+  height:clamp(82px,16%,190px);
+  pointer-events:none;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(8,8,8,0) 0%,
+      rgba(8,8,8,.055) 28%,
+      rgba(8,8,8,.18) 58%,
+      rgba(8,8,8,.32) 100%
+    );
+  backdrop-filter:blur(13px) saturate(.82);
+  -webkit-backdrop-filter:blur(13px) saturate(.82);
+  -webkit-mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 52%,
+      black 100%
+    );
+  mask-image:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 52%,
+      black 100%
+    );
+  opacity:0;
+  transform:translateY(10px);
+  transition:
+    opacity .45s ease,
+    transform .55s var(--ease);
+}
+
+.viewer-card.has-caption .viewer-caption-fade{
+  opacity:1;
+  transform:translateY(0);
+}
+
 @keyframes viewerIn{
   from{
     opacity:0;
@@ -557,10 +764,9 @@ h2 em{
   }
 }
 
-
-/* =========================================
+/* =========================================================
    UPLOAD SHEET
-========================================= */
+========================================================= */
 
 .sheet{
   position:fixed;
@@ -590,7 +796,10 @@ h2 em{
   position:relative;
   width:min(100%,680px);
   margin:auto;
-  padding:9px 22px calc(22px + env(safe-area-inset-bottom));
+  padding:
+    9px
+    22px
+    calc(22px + env(safe-area-inset-bottom));
   border:1px solid rgba(255,255,255,.72);
   border-bottom:0;
   border-radius:30px 30px 0 0;
@@ -668,11 +877,12 @@ h2 em{
   display:grid;
   place-items:center;
   border-radius:50%;
-  background:linear-gradient(
-    135deg,
-    rgba(233,166,190,.36),
-    rgba(168,201,181,.36)
-  );
+  background:
+    linear-gradient(
+      135deg,
+      rgba(233,166,190,.36),
+      rgba(168,201,181,.36)
+    );
   font-size:24px;
   font-weight:300;
 }
@@ -749,11 +959,12 @@ h2 em{
 }
 
 .save-button{
-  background:linear-gradient(
-    110deg,
-    rgba(233,166,190,.72),
-    rgba(168,201,181,.72)
-  );
+  background:
+    linear-gradient(
+      110deg,
+      rgba(233,166,190,.72),
+      rgba(168,201,181,.72)
+    );
   color:#171716;
   text-align:left;
   padding:0 18px;
@@ -763,196 +974,21 @@ h2 em{
   float:right;
 }
 
-
-/* =========================================
-   SHARED ELEMENT TRANSITION
-========================================= */
-
-.shared-transition{
-  position:fixed;
-  z-index:120;
-  display:none;
-  overflow:hidden;
-  pointer-events:none;
-  border-radius:2px;
-  transform-origin:center center;
-  box-shadow:0 22px 60px rgba(0,0,0,.18);
-}
-
-.shared-transition img{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:cover;
-}
-
-.shared-transition.active{
-  display:block;
-}
-
-
-/* =========================================
-   VIEWER BOUNDARY
-========================================= */
-
-.viewer-boundary{
-  position:fixed;
-  z-index:6;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%) scale(.94);
-  padding:10px 15px;
-  border-radius:999px;
-  color:rgba(255,255,255,.88);
-  background:rgba(255,255,255,.11);
-  border:1px solid rgba(255,255,255,.13);
-  backdrop-filter:blur(18px);
-  -webkit-backdrop-filter:blur(18px);
-  font-size:10px;
-  letter-spacing:.14em;
-  text-transform:uppercase;
-  opacity:0;
-  pointer-events:none;
-  transition:
-    opacity .2s ease,
-    transform .3s var(--ease);
-}
-
-.viewer-boundary.visible{
-  opacity:1;
-  transform:translate(-50%,-50%) scale(1);
-}
-
-
-/* =========================================
-   VIEWER CHROME
-========================================= */
-
-.viewer-chrome{
-  position:fixed;
-  z-index:5;
-  left:50%;
-  top:max(22px,calc(20px + env(safe-area-inset-top)));
-  transform:translateX(-50%);
-  color:rgba(255,255,255,.42);
-  font-size:9px;
-  font-weight:650;
-  letter-spacing:.2em;
-  pointer-events:none;
-  transition:
-    opacity .4s ease,
-    transform .4s var(--ease);
-}
-
-.viewer.is-quiet .viewer-chrome,
-.viewer.is-quiet .viewer-progress,
-.viewer.is-quiet .viewer-close{
-  opacity:0;
-}
-
-.viewer.is-quiet .viewer-close{
-  transform:translateY(-5px);
-}
-
-.viewer.is-quiet .viewer-delete{
-  opacity:0;
-  pointer-events:none;
-  transform:translateY(-5px);
-}
-
-.viewer-card.is-active .viewer-photo-wrap{
-  animation:none;
-}
-
-.viewer.is-quiet .viewer-title{
-  opacity:0;
-  transform:translate(-50%,7px);
-}
-
-.viewer-scroll.is-pulling-top
-.viewer-card:first-child
-.viewer-photo-wrap,
-.viewer-scroll.is-pulling-bottom
-.viewer-card:last-child
-.viewer-photo-wrap{
-  transform:scale(.965);
-  opacity:.78;
-  filter:blur(.4px);
-}
-
-.viewer-scroll.is-pulling-top,
-.viewer-scroll.is-pulling-bottom{
-  cursor:grabbing;
-}
-
-
-/* =========================================
-   CAPTION FADE
-========================================= */
-
-.viewer-caption-fade{
-  position:absolute;
-  left:-10%;
-  right:-10%;
-  bottom:-8%;
-  z-index:-1;
-  height:clamp(82px,16%,190px);
-  pointer-events:none;
-  background:
-    linear-gradient(
-      to bottom,
-      rgba(8,8,8,0) 0%,
-      rgba(8,8,8,.055) 28%,
-      rgba(8,8,8,.18) 58%,
-      rgba(8,8,8,.32) 100%
-    );
-  backdrop-filter:blur(13px) saturate(.82);
-  -webkit-backdrop-filter:blur(13px) saturate(.82);
-  -webkit-mask-image:linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 52%,
-    black 100%
-  );
-  mask-image:linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 52%,
-    black 100%
-  );
-  opacity:0;
-  transform:translateY(10px);
-  transition:
-    opacity .45s ease,
-    transform .55s var(--ease);
-}
-
-.viewer-card.has-caption .viewer-caption-fade{
-  opacity:1;
-  transform:translateY(0);
-}
-
-@keyframes captionIn{
-  from{
-    opacity:0;
-    transform:translate(-50%,10px);
-  }
-  to{
-    opacity:1;
-    transform:translate(-50%,0);
-  }
-}
-
-
-/* =========================================
-   DELETE CONTROL
-========================================= */
+/* =========================================================
+   DELETE BUTTON
+========================================================= */
 
 .viewer-delete{
   position:fixed;
   z-index:6;
-  top:max(18px,calc(16px + env(safe-area-inset-top)));
-  right:max(18px,env(safe-area-inset-right));
+  top:max(
+    18px,
+    calc(16px + env(safe-area-inset-top))
+  );
+  right:max(
+    18px,
+    env(safe-area-inset-right)
+  );
   width:42px;
   height:42px;
   border-radius:50%;
@@ -1023,10 +1059,15 @@ h2 em{
   transform:translateY(-1px);
 }
 
+.viewer.is-quiet .viewer-delete{
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(-5px);
+}
 
-/* =========================================
+/* =========================================================
    DELETE SHEET
-========================================= */
+========================================================= */
 
 .delete-sheet{
   position:fixed;
@@ -1056,7 +1097,10 @@ h2 em{
   position:relative;
   width:min(100%,560px);
   margin:auto;
-  padding:10px 22px calc(22px + env(safe-area-inset-bottom));
+  padding:
+    10px
+    22px
+    calc(22px + env(safe-area-inset-bottom));
   border:1px solid rgba(255,255,255,.16);
   border-bottom:0;
   border-radius:28px 28px 0 0;
@@ -1142,21 +1186,18 @@ h2 em{
   border-radius:15px;
   cursor:pointer;
   color:#211;
-  background:linear-gradient(
-    110deg,
-    rgba(233,166,190,.92),
-    rgba(241,203,211,.90)
-  );
+  background:
+    linear-gradient(
+      110deg,
+      rgba(233,166,190,.92),
+      rgba(241,203,211,.90)
+    );
+  border:1px solid rgba(255,255,255,.10);
 }
 
 .delete-confirm:active,
 .ghost-button:active{
   transform:scale(.98);
-}
-
-.viewer-close,
-.viewer-delete{
-  touch-action:manipulation;
 }
 
 .delete-actions .ghost-button{
@@ -1171,14 +1212,40 @@ h2 em{
   border-color:rgba(255,255,255,.20);
 }
 
-.delete-actions .delete-confirm{
-  border:1px solid rgba(255,255,255,.10);
+.viewer-close,
+.viewer-delete{
+  touch-action:manipulation;
 }
 
+/* =========================================================
+   SHARED TRANSITION
+========================================================= */
 
-/* =========================================
-   RESPONSIVE
-========================================= */
+.shared-transition{
+  position:fixed;
+  z-index:120;
+  display:none;
+  overflow:hidden;
+  pointer-events:none;
+  border-radius:2px;
+  transform-origin:center center;
+  box-shadow:0 22px 60px rgba(0,0,0,.18);
+}
+
+.shared-transition img{
+  width:100%;
+  height:100%;
+  display:block;
+  object-fit:cover;
+}
+
+.shared-transition.active{
+  display:block;
+}
+
+/* =========================================================
+   DESKTOP / TABLET
+========================================================= */
 
 @media(min-width:720px){
 
@@ -1192,39 +1259,92 @@ h2 em{
   }
 }
 
+@media(min-width:700px){
 
-/* =========================================
+  .viewer-scroll{
+    scroll-snap-type:y mandatory;
+  }
+}
+
+/* =========================================================
    MOBILE
-   TIGHTER HERO SPACING
-========================================= */
+   Main hero spacing fix
+========================================================= */
 
 @media(max-width:600px){
 
   .site-shell{
-    padding:0 10px 70px;
+    padding-left:max(
+      10px,
+      env(safe-area-inset-left)
+    );
+    padding-right:max(
+      10px,
+      env(safe-area-inset-right)
+    );
+    padding-bottom:70px;
   }
 
   .hero{
     /*
       Previously 740px.
-      Reduced so the top labels and hero copy
-      don't feel too far apart on iPhone.
+      Lowering this prevents the hero from feeling
+      unnecessarily stretched on iPhone.
     */
     min-height:680px;
-    padding-top:max(24px,calc(18px + env(safe-area-inset-top)));
-    padding-bottom:42px;
+
+    padding-top:max(
+      24px,
+      calc(18px + env(safe-area-inset-top))
+    );
+
+    padding-left:8px;
+    padding-right:8px;
+    padding-bottom:50px;
   }
 
+  /*
+    KEEP BOTH LABELS VISIBLE.
+    Do NOT use display:none here.
+  */
   .hero-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
     padding-right:2px;
   }
 
-  .status{
-    display:none;
+  .hero-top .micro{
+    font-size:9px;
+    letter-spacing:.16em;
+    white-space:nowrap;
   }
 
+  .status{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    flex-shrink:0;
+  }
+
+  .status i{
+    width:5px;
+    height:5px;
+    box-shadow:0 0 0 3px rgba(168,201,181,.16);
+  }
+
+  /*
+    This is the important spacing adjustment.
+
+    margin-top:auto is still used so the hero remains
+    vertically balanced, but padding-top gives us a
+    controlled amount of breathing room instead of
+    making the gap feel excessive.
+  */
   .hero-copy{
     margin-top:auto;
+    padding-top:60px;
   }
 
   .kicker{
@@ -1237,12 +1357,17 @@ h2 em{
   }
 
   .hero-meta{
-    margin-top:30px;
     gap:10px;
+    margin-top:35px;
   }
 
   .meta-line{
     width:44px;
+  }
+
+  .gallery-section{
+    padding-top:38px;
+    padding-bottom:env(safe-area-inset-bottom);
   }
 
   .gallery{
@@ -1253,6 +1378,10 @@ h2 em{
     padding:0 2px 16px;
   }
 
+  /*
+    Keep this hidden on mobile because it was
+    intentionally designed that way in the original.
+  */
   .section-head p{
     display:none;
   }
@@ -1282,8 +1411,15 @@ h2 em{
   }
 
   .viewer-progress{
-    right:max(18px,env(safe-area-inset-right));
-    bottom:max(18px,calc(18px + env(safe-area-inset-bottom)));
+    right:max(
+      18px,
+      env(safe-area-inset-right)
+    );
+    bottom:max(
+      18px,
+      calc(18px + env(safe-area-inset-bottom))
+    );
+    min-width:0;
     font-size:10px;
     letter-spacing:.14em;
     padding:6px 9px;
@@ -1309,71 +1445,20 @@ h2 em{
   }
 }
 
-
-/* =========================================
-   SAFE AREA / VIEWPORT SAFETY
-========================================= */
+/* =========================================================
+   SAFE AREA
+========================================================= */
 
 @supports (padding:max(0px)){
-
-  .site-shell{
-    padding-left:max(22px,env(safe-area-inset-left));
-    padding-right:max(22px,env(safe-area-inset-right));
-  }
 
   .gallery-section{
     padding-bottom:env(safe-area-inset-bottom);
   }
 }
 
-.viewer-progress,
-.viewer-close,
-.viewer-hint{
-  pointer-events:auto;
-}
-
-.viewer-progress{
-  min-width:0;
-  text-align:right;
-}
-
-.viewer-hint{
-  white-space:nowrap;
-}
-
-
-/* Re-apply mobile safe-area after desktop defaults */
-@media(max-width:600px){
-
-  .site-shell{
-    padding-left:max(10px,env(safe-area-inset-left));
-    padding-right:max(10px,env(safe-area-inset-right));
-  }
-
-  .hero{
-    padding-top:max(
-      24px,
-      calc(18px + env(safe-area-inset-top))
-    );
-  }
-}
-
-
-/* =========================================
-   TABLET / DESKTOP VIEWER SNAP
-========================================= */
-
-@media(min-width:700px){
-
-  .viewer-scroll{
-    scroll-snap-type:y mandatory;
-  }
-}
-
-
-/* =========================================
+/* =========================================================
    REDUCED MOTION
-========================================= */
+========================================================= */
 
 @media(prefers-reduced-motion:reduce){
 
