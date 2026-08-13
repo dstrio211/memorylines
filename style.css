@@ -129,6 +129,10 @@ h1 em,h2 em{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-s
 .viewer-close span{position:absolute;width:17px;height:1.3px;background:white;border-radius:99px}
 .viewer-close span:first-child{transform:rotate(45deg)}
 .viewer-close span:last-child{transform:rotate(-45deg)}
+.viewer-progress{
+  position:fixed;z-index:5;top:max(22px,calc(20px + env(safe-area-inset-top)));right:max(18px,env(safe-area-inset-right));
+  font-size:10px;letter-spacing:.17em;color:rgba(255,255,255,.65)
+}
 .viewer-hint{
   position:fixed;z-index:5;left:50%;bottom:max(18px,calc(18px + env(safe-area-inset-bottom)));
   transform:translateX(-50%);display:flex;align-items:center;gap:9px;
@@ -402,6 +406,85 @@ h1 em,h2 em{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-s
 }
 
 
+/* Phase 6 — delete control + password sheet */
+.viewer-delete{
+  position:fixed;
+  z-index:6;
+  top:max(18px,calc(16px + env(safe-area-inset-top)));
+  right:max(18px,env(safe-area-inset-right));
+  width:42px;height:42px;
+  border-radius:50%;
+  display:grid;place-items:center;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.15);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  cursor:pointer;
+  transition:opacity .4s ease,transform .3s var(--ease),background .25s ease;
+}
+.trash-can{
+  position:relative;width:13px;height:15px;
+  border:1.3px solid rgba(255,255,255,.92);
+  border-top:0;border-radius:2px 2px 3px 3px;
+  margin-top:3px;
+}
+.trash-can:before,.trash-can:after{
+  content:"";position:absolute;top:3px;width:1px;height:8px;background:rgba(255,255,255,.72);
+}
+.trash-can:before{left:3.5px}.trash-can:after{right:3.5px}
+.trash-lid{
+  position:absolute;width:14px;height:1.4px;border-radius:99px;background:rgba(255,255,255,.92);
+  transform:translateY(-6px);
+}
+.trash-lid:after{
+  content:"";position:absolute;left:5px;top:-3px;width:4px;height:2px;border:1px solid rgba(255,255,255,.88);border-bottom:0;border-radius:2px 2px 0 0;
+}
+.viewer-delete:hover{background:rgba(255,255,255,.15);transform:translateY(-1px)}
+.viewer.is-quiet .viewer-delete{opacity:0;pointer-events:none;transform:translateY(-5px)}
+
+.delete-sheet{
+  position:fixed;z-index:150;inset:0;display:grid;align-items:end;
+  opacity:0;pointer-events:none;transition:opacity .38s ease;
+}
+.delete-sheet.open{opacity:1;pointer-events:auto}
+.delete-scrim{
+  position:absolute;inset:0;background:rgba(8,8,8,.32);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+}
+.delete-panel{
+  position:relative;width:min(100%,560px);margin:auto;
+  padding:10px 22px calc(22px + env(safe-area-inset-bottom));
+  border:1px solid rgba(255,255,255,.16);border-bottom:0;
+  border-radius:28px 28px 0 0;
+  color:#f8f7f4;background:rgba(18,18,18,.88);
+  backdrop-filter:blur(30px) saturate(120%);-webkit-backdrop-filter:blur(30px) saturate(120%);
+  box-shadow:0 -25px 80px rgba(0,0,0,.35);
+  transform:translateY(105%);
+  transition:transform .65s var(--ease);
+}
+.delete-sheet.open .delete-panel{transform:translateY(0)}
+.delete-panel .micro{color:rgba(255,255,255,.48)}
+.delete-panel h2{
+  margin:8px 0 10px;font-size:38px;line-height:.92;letter-spacing:-.055em;font-weight:550;
+}
+.delete-panel h2 em{color:rgba(255,255,255,.82)}
+.delete-panel>p{margin:0 0 20px;color:rgba(255,255,255,.5);font-size:12px;line-height:1.5}
+.delete-field{display:block}
+.delete-field span{display:block;margin-bottom:7px;font-size:9px;letter-spacing:.17em;color:rgba(255,255,255,.5)}
+.delete-field input{
+  width:100%;padding:14px 15px;border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;outline:none;color:#fff;background:rgba(255,255,255,.07);
+}
+.delete-field input:focus{border-color:rgba(233,166,190,.72);box-shadow:0 0 0 4px rgba(233,166,190,.10)}
+.delete-error{min-height:18px;margin-top:8px;color:#f1b4c8;font-size:11px}
+.delete-actions{display:grid;grid-template-columns:.82fr 1.5fr;gap:10px;margin-top:4px}
+.delete-confirm{
+  height:50px;border-radius:15px;cursor:pointer;color:#211;
+  background:linear-gradient(110deg,rgba(233,166,190,.92),rgba(241,203,211,.90));
+}
+.delete-confirm:active,.ghost-button:active{transform:scale(.98)}
+.viewer-close,.viewer-delete{touch-action:manipulation}
+
 @media(max-width:600px){
   .viewer-close,.viewer-delete{width:44px;height:44px}
   .delete-panel{padding-left:16px;padding-right:16px}
@@ -425,13 +508,27 @@ h1 em,h2 em{font-family:Georgia,"Times New Roman",serif;font-weight:400;letter-s
 
 
 /* Phase 6.2 — fix progress text colliding with the trash button */
+.viewer-progress{
+  top:auto;
+  right:max(21px,env(safe-area-inset-right));
+  bottom:max(22px,calc(22px + env(safe-area-inset-bottom)));
+  min-width:0;
+  text-align:right;
+  padding:7px 10px;
+  border-radius:999px;
+  color:rgba(255,255,255,.52);
+  background:rgba(0,0,0,.10);
+  border:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  transition:opacity .4s ease, transform .4s var(--ease);
+}
+
 @media(max-width:600px){
+  .viewer-progress{
+    right:max(18px,env(safe-area-inset-right));
+    bottom:max(18px,calc(18px + env(safe-area-inset-bottom)));
+    font-size:10px;
+    padding:6px 9px;
   }
-
-/* Final empty prototype: delete UI hidden from normal users. */
-.delete-sheet{display:none !important;opacity:0 !important;visibility:hidden !important;pointer-events:none !important;}
-
-/* Empty-state polish */
-.gallery-section:has(.empty-state:not([hidden])){
-  min-height:38vh;
 }
