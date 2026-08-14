@@ -1620,6 +1620,9 @@ viewer.addEventListener(
 /* =========================================================
    PULL UI
 ========================================================= */
+/* =========================================================
+   PULL UI + INTENTIONAL SWIPE NAVIGATION
+   ========================================================= */
 
 function setPullClass(
   direction,
@@ -1633,8 +1636,7 @@ function setPullClass(
 
   viewerScroll.classList.toggle(
     "is-pulling-bottom",
-    direction ===
-      "bottom" &&
+    direction === "bottom" &&
       pull > 8
   );
 
@@ -1667,13 +1669,113 @@ function resetPullClass() {
     "translate(-50%,-50%) scale(.94)";
 }
 
+
+/* =========================================================
+   INTENTIONAL SWIPE ENGINE
+   ========================================================= */
+
+let swipeStartX = 0;
+let swipeStartY = 0;
+let swipeStartTime = 0;
+let swipeTracking = false;
+let swipeMoved = false;
+let suppressViewerClick = false;
+
+
+/*
+ * Navigate directly to one photo.
+ *
+ * The user no longer physically drags the photo.
+ * A swipe is interpreted as a command to move
+ * to the previous/next memory.
+ */
+function goToPhoto(
+  index,
+  behavior = "smooth"
+) {
+  if (!viewerOpen) return;
+
+  const cards =
+    viewerScroll.querySelectorAll(
+      ".viewer-card"
+    );
+
+  const nextIndex =
+    Math.max(
+      0,
+      Math.min(
+        index,
+        cards.length - 1
+      )
+    );
+
+  const card =
+    cards[nextIndex];
+
+  if (!card) return;
+
+  activeIndex =
+    nextIndex;
+
+  setActiveCard(
+    activeIndex
+  );
+
+  setBackdrop(
+    activeIndex
+  );
+
+  hintDismissed = true;
+
+  viewer.classList.add(
+    "has-scrolled"
+  );
+
+  card.scrollIntoView({
+    behavior,
+    block: "start"
+  });
+}
+
+
+/* =========================================================
+   TOUCH START
+   ========================================================= */
+
 viewerScroll.addEventListener(
   "touchstart",
   event => {
-    tapStart = Date.now();
+    if (
+      !viewerOpen ||
+      event.touches.length !== 1
+    ) {
+      return;
+    }
 
+    const touch =
+      event.touches[0];
+
+    swipeStartX =
+      touch.clientX;
+
+    swipeStartY =
+      touch.clientY;
+
+    swipeStartTime =
+      Date.now();
+
+    swipeTracking = true;
+    swipeMoved = false;
+
+    tapStart =
+      Date.now();
+
+    /*
+     * Boundary pull is only activated when
+     * we're actually at the first/last photo.
+     */
     startBoundaryDrag(
-      event.touches[0].clientY
+      touch.clientY
     );
   },
   {
@@ -1681,11 +1783,59 @@ viewerScroll.addEventListener(
   }
 );
 
+
+/* =========================================================
+   TOUCH MOVE
+   ========================================================= */
+
 viewerScroll.addEventListener(
   "touchmove",
   event => {
+    if (
+      !viewerOpen ||
+      !swipeTracking ||
+      event.touches.length !== 1
+    ) {
+      return;
+    }
+
+    const touch =
+      event.touches[0];
+
+    const deltaX =
+      touch.clientX -
+      swipeStartX;
+
+    const deltaY =
+      touch.clientY -
+      swipeStartY;
+
+    /*
+     * If the gesture is mainly horizontal,
+     * completely ignore it.
+     *
+     * This prevents the photo from being
+     * tossed left/right.
+     */
+    if (
+      Math.abs(deltaX) >
+      Math.abs(deltaY) * 0.75
+    ) {
+      return;
+    }
+
+    if (
+      Math.abs(deltaY) > 8
+    ) {
+      swipeMoved = true;
+    }
+
+    /*
+     * Only update the boundary UI when
+     * we're on the first or last photo.
+     */
     updateBoundaryDrag(
-      event.touches[0].clientY
+      touch.clientY
     );
 
     if (
@@ -1693,23 +1843,34 @@ viewerScroll.addEventListener(
       dragStartY != null
     ) {
       const delta =
-        event.touches[0].clientY -
+        touch.clientY -
         dragStartY;
 
       const atTop =
         activeIndex === 0;
 
-      const pull = atTop
-        ? Math.max(
+      const atBottom =
+        activeIndex ===
+        memories.length - 1;
+
+      let pull = 0;
+
+      if (atTop) {
+        pull =
+          Math.max(
             0,
             delta
-          )
-        : Math.max(
+          );
+      } else if (atBottom) {
+        pull =
+          Math.max(
             0,
             -delta
           );
+      }
 
-      boundaryPull = pull;
+      boundaryPull =
+        pull;
 
       setPullClass(
         atTop
@@ -1718,28 +1879,195 @@ viewerScroll.addEventListener(
         pull
       );
     }
+
+    /*
+     * CRITICAL:
+     *
+     * Prevent the browser from physically
+     * scrolling the viewer while we're
+     * interpreting the gesture ourselves.
+     */
+    event.preventDefault();
   },
   {
-    passive: true
+    passive: false
   }
 );
 
+
+/* =========================================================
+   TOUCH END
+   ========================================================= */
+
 viewerScroll.addEventListener(
   "touchend",
-  event => {
-    endBoundaryDrag(
-      event.changedTouches[0]
-        .clientY
-    );
+  async event => {
+    if (
+      !viewerOpen ||
+      !swipeTracking
+    ) {
+      return;
+    }
+
+    const touch =
+      event.changedTouches[0];
+
+    const deltaX =
+      touch.clientX -
+      swipeStartX;
+
+    const deltaY =
+      touch.clientY -
+      swipeStartY;
+
+    const elapsed =
+      Math.max(
+        1,
+        Date.now() -
+          swipeStartTime
+      );
+
+    swipeTracking =
+      false;
+
+    /*
+     * Let the existing boundary-close
+     * behavior have priority.
+     */
+    const wasClosed =
+      await endBoundaryDrag(
+        touch.clientY
+      );
 
     boundaryPull = 0;
 
     resetPullClass();
+
+    if (
+      wasClosed ||
+      !viewerOpen
+    ) {
+      swipeMoved = false;
+      return;
+    }
+
+    /*
+     * Ignore horizontal gestures.
+     */
+    if (
+      Math.abs(deltaX) >
+      Math.abs(deltaY) * 0.75
+    ) {
+      swipeMoved = false;
+      return;
+    }
+
+    const distance =
+      Math.abs(deltaY);
+
+    const velocity =
+      distance /
+      elapsed;
+
+    /*
+     * Swipe requirements:
+     *
+     * Normal swipe:
+     * 55px or more
+     *
+     * Fast swipe:
+     * 30px or more + sufficient velocity
+     *
+     * This prevents tiny movements from
+     * changing the photo while still making
+     * intentional swipes easy.
+     */
+    const committed =
+      distance >= 55 ||
+      (
+        distance >= 30 &&
+        velocity >= 0.55
+      );
+
+    if (!committed) {
+      swipeMoved = false;
+      return;
+    }
+
+    /*
+     * Up = next photo
+     * Down = previous photo
+     */
+    const direction =
+      deltaY < 0
+        ? 1
+        : -1;
+
+    const nextIndex =
+      activeIndex +
+      direction;
+
+    /*
+     * Don't navigate outside the gallery.
+     */
+    if (
+      nextIndex < 0 ||
+      nextIndex >=
+        memories.length
+    ) {
+      swipeMoved = false;
+      return;
+    }
+
+    /*
+     * Prevent the same touch from also
+     * being interpreted as a click.
+     */
+    suppressViewerClick =
+      true;
+
+    goToPhoto(
+      nextIndex,
+      "smooth"
+    );
+
+    setTimeout(() => {
+      suppressViewerClick =
+        false;
+    }, 350);
+
+    swipeMoved = false;
   },
   {
     passive: true
   }
 );
+
+
+/* =========================================================
+   VIEWER CLICK PROTECTION
+   ========================================================= */
+
+viewer.addEventListener(
+  "click",
+  event => {
+    if (!viewerOpen) return;
+
+    if (
+      suppressViewerClick
+    ) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+  },
+  true
+);
+
+
+/* =========================================================
+   MOUSE / DESKTOP INTERACTION
+   ========================================================= */
 
 viewer.addEventListener(
   "mousemove",
@@ -1752,7 +2080,6 @@ viewer.addEventListener(
     passive: true
   }
 );
-
 
 /* =========================================================
    INITIALIZE
